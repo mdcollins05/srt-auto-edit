@@ -1,0 +1,9 @@
+---
+- pattern: "www.google.com"
+  type: "string"
+  action: "replace"
+  value: "google.com"
+- pattern: "([a-z]+)"
+  type: "regex"
+  action: "delete"
+
