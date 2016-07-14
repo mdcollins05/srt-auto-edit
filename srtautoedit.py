@@ -39,11 +39,11 @@ def parse_srt(settings, file, dry_run):
     print("Couldn't open file {0}".format(file)
     return
 
-  for subtitle in subtitles:
+  for i in range(len(subtitles)):
     for rule in settings:
       if rule['type'] == 'regex':
         if rule['action'] == 'replace':
-          pass # re.sub
+          subtitles[i].text = re.sub(rule['pattern'], rule['value'], subtitles[i].text, flags=re.IGNORECASE)
         elif rule['action'] == 'delete':
           pass # re.match
         else:
@@ -59,13 +59,13 @@ def parse_srt(settings, file, dry_run):
         print("Unknown type: {0}".format(rule['type']))
 
   if not dry_run:
+    subtitles.clean_indexes()
     subtitles.save(file)
 
 def validate_regex(settings):
   for rule in settings:
     if type == "regex":
-      rule['regex'] = compile_regex(rule['pattern'])
-  return settings
+      compile_regex(rule['pattern'])
 
 def compile_regex(regex):
   try:
