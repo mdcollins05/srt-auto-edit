@@ -39,7 +39,7 @@ def parse_srt(settings, file, dry_run, verbose):
   try:
     subtitles = pysrt.open(file)
   except:
-    print("Couldn't open file {0}".format(file)
+    print("Couldn't open file {0}".format(file))
     return False
 
   for i in range(len(subtitles)):
