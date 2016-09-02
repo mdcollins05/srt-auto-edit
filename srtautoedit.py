@@ -53,7 +53,6 @@ def parse_srt(settings, file, dry_run, verbose):
     original_subtitle_text = original_subtitles[i].text
     new_subtitle = pysrt.SubRipItem(i, start=original_subtitles[i].start, end=original_subtitles[i].end, text=original_subtitles[i].text)
     for rule in settings:
-      print("Applying rule type {0} {1}".format(rule['type'], rule['action']))
       if new_subtitle is None:
         break
       if rule['type'] == 'regex':
@@ -82,11 +81,13 @@ def parse_srt(settings, file, dry_run, verbose):
           print("{0}".format(original_subtitle_text))
           print("#####################")
           print("## New text #########")
-          print("{0}".format(subtitles[i].text))
+          print("{0}".format(new_subtitle.text))
           print("#####################")
     else:
       if dry_run or verbose:
-        print("Removed..")
+        print("## Removed subtitle #")
+        print("{0}".format(original_subtitle_text))
+        print("#####################")
 
   if not dry_run:
     new_subtitle_file.clean_indexes()
