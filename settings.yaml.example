@@ -4,10 +4,6 @@
   action: "replace"
   value: "google.com"
 
-- type: "regex"
-  pattern: "([a-z]+)"
-  action: "delete"
-
 - name: "Remove extra spaces"
   type: "regex"
   pattern: "[\\s]{2,}"
