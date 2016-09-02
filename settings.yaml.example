@@ -1,23 +1,23 @@
 ---
-- type: "string"
-  pattern: "www.google.com"
-  action: "replace"
-  value: "google.com"
+- type: string
+  pattern: www.google.com
+  action: replace
+  value: google.com
 
-- name: "Remove extra spaces"
-  type: "regex"
-  pattern: "[\\s]{2,}"
-  action: "replace"
+- name: Remove extra spaces
+  type: regex
+  pattern: '[\s]{2,}'
+  action: replace
   value: " "
 
-- name: "Remove spaces at the beginning of a line"
-  type: "regex"
-  pattern: "^\\s+"
-  action: "replace"
+- name: Remove spaces at the beginning of a line
+  type: regex
+  pattern: ^\s+
+  action: replace
   value: ""
 
-- name: "Remove spaces at the end of a line"
-  type: "regex"
-  pattern: "\\s+$"
+- name: Remove spaces at the end of a line
+  type: regex
+  pattern: \s+$
   action: "replace"
   value: ""
