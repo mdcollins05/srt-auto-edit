@@ -59,7 +59,11 @@ def parse_srt(settings, file, dry_run, verbose):
           print("Unknown action: {0}".format(rule['action']))
       else:
         print("Unknown type: {0}".format(rule['type']))
-    #Add some logic to check if changes were made here
+    if (dry_run or verbose) and (subtitles[i].text != original_subtitle.text):
+      print("Original text:")
+      print("{0}".format(original_subtitle.text))
+      print("New text:")
+      print("{0}".format(subtitles[i].text))
 
   if not dry_run:
     subtitles.clean_indexes()
