@@ -38,46 +38,58 @@ def main():
     print("'{0}' doesn't exist".format(args.srt))
 
 def parse_srt(settings, file, dry_run, verbose):
-  print("Parsing '{0}'...".format(file))
+  if verbose:
+    print("Parsing '{0}'...".format(file))
 
   try:
-    subtitles = pysrt.open(file)
+    original_subtitles = pysrt.open(file)
   except:
     print("Couldn't open file {0}".format(file))
     return False
 
-  for i in range(len(subtitles)):
-    original_subtitle = subtitles[i].text
+  new_subtitle_file = pysrt.SubRipFile()
+  new_subtitle = None
+  for i in range(len(original_subtitles)):
+    original_subtitle_text = original_subtitles[i].text
+    new_subtitle = pysrt.SubRipItem(i, start=original_subtitles[i].start, end=original_subtitles[i].end, text=original_subtitles[i].text)
     for rule in settings:
+      if new_subtitle is None:
+        break
       if rule['type'] == 'regex':
         if rule['action'] == 'replace':
-          subtitles[i].text = re.sub(rule['pattern'], rule['value'], subtitles[i].text)
+          new_subtitle.text = re.sub(rule['pattern'], rule['value'], new_subtitle.text, re.MULTILINE)
         elif rule['action'] == 'delete':
-          pass # re.match
+          if re.search(rule['pattern'], new_subtitle.text, re.MULTILINE):
+            new_subtitle = None
         else:
           print("Unknown action: {0}".format(rule['action']))
       elif rule['type'] == 'string':
         if rule['action'] == 'replace':
-          pass # subtitle.replace
+          new_subtitle.text.replace(rule['pattern'], rule['value'])
         elif rule['action'] == 'delete':
-          pass # subtitle.find
+          if new_subtitle.text.find(rule['pattern']) == -1:
+            new_subtitle = None
         else:
           print("Unknown action: {0}".format(rule['action']))
       else:
         print("Unknown type: {0}".format(rule['type']))
-    if (dry_run or verbose) and subtitles[i].text != original_subtitle:
-      print("Original text:")
-      print("=================")
-      print("{0}".format(original_subtitle))
-      print("=================")
-      print("New text:")
-      print("=================")
-      print("{0}".format(subtitles[i].text))
-      print("=================")
+    if new_subtitle is not None:
+      if new_subtitle.text != '':
+        new_subtitle_file.append(new_subtitle)
+        if (dry_run or verbose) and (subtitles[i].text != original_subtitle_text or marked_for_deletion):
+          print("## Original text ####")
+          print("{0}".format(original_subtitle_text))
+          print("#####################")
+          print("## New text #########")
+          print("{0}".format(subtitles[i].text))
+          print("#####################")
+    else:
+      if dry_run or verbose:
+        print("Removed..")
 
   if not dry_run:
-    subtitles.clean_indexes()
-    subtitles.save(file)
+    new_subtitle_file.clean_indexes()
+    new_subtitle_file.save(file)
 
   return True
 

@@ -1,9 +1,26 @@
 ---
-- pattern: "www.google.com"
-  type: "string"
+- type: "string"
+  pattern: "www.google.com"
   action: "replace"
   value: "google.com"
-- pattern: "([a-z]+)"
-  type: "regex"
+
+- type: "regex"
+  pattern: "([a-z]+)"
   action: "delete"
 
+- name: "Remove extra spaces"
+  type: "regex"
+  pattern: "[\\s]{2,}"
+  action: "replace"
+  value: " "
+
+- name: "Remove spaces at the beginning of a line"
+  type: "regex"
+  pattern: "^\\s+"
+  action: "replace"
+  value: ""
+
+- name: "Remove spaces at the end of a line"
+  type: "regex"
+  pattern: "\\s+"
+  action: "delete"
