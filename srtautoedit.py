@@ -18,8 +18,8 @@ def main():
 
   argsparser = argparse.ArgumentParser(description="Automatically apply a set of rules to srt files")
   argsparser.add_argument("srt", help="SRT file or directory to operate on")
-  argsparser.add_argument("--dry-run", "-d", help="Dry run. This will not make any changes and instead will tell you what it would do")
-  argsparser.add_argument("--verbose", "-v", help="Verbose output. Lines that have changed will be printed on screen")
+  argsparser.add_argument("--dry-run", "-d", action="store_true", help="Dry run. This will not make any changes and instead will tell you what it would do")
+  argsparser.add_argument("--verbose", "-v", action="store_true", help="Verbose output. Lines that have changed will be printed on screen")
 
   args = argsparser.parse_args()
 
