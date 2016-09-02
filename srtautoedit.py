@@ -40,7 +40,7 @@ def parse_srt(settings, file, dry_run, verbose):
     subtitles = pysrt.open(file)
   except:
     print("Couldn't open file {0}".format(file)
-    return
+    return False
 
   for i in range(len(subtitles)):
     original_subtitle = subtitles[i]
@@ -70,6 +70,8 @@ def parse_srt(settings, file, dry_run, verbose):
   if not dry_run:
     subtitles.clean_indexes()
     subtitles.save(file)
+
+  return True
 
 def validate_regex(settings):
   for rule in settings:
