@@ -17,20 +17,21 @@ def main():
   argsparser = argparse.ArgumentParser(description="Automatically apply a set of rules to srt files")
   argsparser.add_argument("srt", help="SRT file or directory to operate on")
   argsparser.add_argument("--dry-run", "-d", help="Dry run. This will not make any changes and instead will tell you what it would do")
+  argsparser.add_argument("--verbose", "-v", help="Verbose output. Lines that have changed will be printed on screen")
 
   args = argsparser.parse_args()
 
   if os.path.isfile(args.srt):
-    parse_srt(settingsYaml, args.srt)
+    parse_srt(settingsYaml, args.srt, args.dry_run, args.verbose)
   elif os.path.isdir(args.srt):
     for root, dirs, files in os.walk(args.srt):
       for file in files:
         if file.endswith(".srt"):
-          parse_srt(settingsYaml, os.path.join(root, file), args.dry_run)
+          parse_srt(settingsYaml, os.path.join(root, file), args.dry_run, args.verbose)
   else:
     print("'{0}' doesn't exist".format(args.srt))
 
-def parse_srt(settings, file, dry_run):
+def parse_srt(settings, file, dry_run, verbose):
   print("Parsing '{0}'...".format(file))
 
   try:
@@ -40,6 +41,7 @@ def parse_srt(settings, file, dry_run):
     return
 
   for i in range(len(subtitles)):
+    original_subtitle = subtitles[i]
     for rule in settings:
       if rule['type'] == 'regex':
         if rule['action'] == 'replace':
@@ -57,6 +59,7 @@ def parse_srt(settings, file, dry_run):
           print("Unknown action: {0}".format(rule['action']))
       else:
         print("Unknown type: {0}".format(rule['type']))
+    #Add some logic to check if changes were made here
 
   if not dry_run:
     subtitles.clean_indexes()
