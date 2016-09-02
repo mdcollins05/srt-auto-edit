@@ -48,10 +48,11 @@ def parse_srt(settings, file, dry_run, verbose):
 
   for i in range(len(subtitles)):
     original_subtitle = subtitles[i]
+    print(subtitles[i].text)
     for rule in settings:
       if rule['type'] == 'regex':
         if rule['action'] == 'replace':
-          subtitles[i].text = re.sub(rule['pattern'], rule['value'], subtitles[i].text, flags=re.IGNORECASE)
+          subtitles[i].text = re.sub(rule['pattern'], rule['value'], subtitles[i].text)
         elif rule['action'] == 'delete':
           pass # re.match
         else:
