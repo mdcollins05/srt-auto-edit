@@ -47,8 +47,7 @@ def parse_srt(settings, file, dry_run, verbose):
     return False
 
   for i in range(len(subtitles)):
-    original_subtitle = subtitles[i]
-    print(subtitles[i].text)
+    original_subtitle = subtitles[i].text
     for rule in settings:
       if rule['type'] == 'regex':
         if rule['action'] == 'replace':
@@ -66,11 +65,15 @@ def parse_srt(settings, file, dry_run, verbose):
           print("Unknown action: {0}".format(rule['action']))
       else:
         print("Unknown type: {0}".format(rule['type']))
-    if (dry_run or verbose) and (subtitles[i].text != original_subtitle.text):
+    if (dry_run or verbose) and subtitles[i].text != original_subtitle:
       print("Original text:")
-      print("{0}".format(original_subtitle.text))
+      print("=================")
+      print("{0}".format(original_subtitle))
+      print("=================")
       print("New text:")
+      print("=================")
       print("{0}".format(subtitles[i].text))
+      print("=================")
 
   if not dry_run:
     subtitles.clean_indexes()
