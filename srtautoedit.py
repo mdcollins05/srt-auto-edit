@@ -60,8 +60,6 @@ def parse_srt(settings, file, dry_run, verbose):
 
       if rule['type'] == 'regex':
         if rule['action'] == 'replace':
-          print(rule['pattern'])
-          print(rule['value'])
           new_subtitle.text = re.sub(rule['pattern'], rule['value'], new_subtitle.text, re.MULTILINE)
         elif rule['action'] == 'delete':
           if re.findall(rule['pattern'], new_subtitle.text, re.MULTILINE):
