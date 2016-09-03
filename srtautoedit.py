@@ -49,12 +49,15 @@ def parse_srt(settings, file, dry_run, verbose):
 
   new_subtitle_file = pysrt.SubRipFile()
   new_subtitle = None
+
   for i in range(len(original_subtitles)):
     original_subtitle_text = original_subtitles[i].text
     new_subtitle = pysrt.SubRipItem(i, start=original_subtitles[i].start, end=original_subtitles[i].end, text=original_subtitles[i].text)
+
     for rule in settings:
       if new_subtitle is None:
         break
+
       if rule['type'] == 'regex':
         if rule['action'] == 'replace':
           print(rule['pattern'])
@@ -75,7 +78,7 @@ def parse_srt(settings, file, dry_run, verbose):
           print("Unknown action: {0}".format(rule['action']))
       else:
         print("Unknown type: {0}".format(rule['type']))
-      break
+
     if new_subtitle is not None:
       if new_subtitle.text != '':
         new_subtitle_file.append(new_subtitle)
@@ -92,6 +95,8 @@ def parse_srt(settings, file, dry_run, verbose):
         print("#####################")
 
   if not dry_run:
+    if verbose:
+      print("Saving subtitle file...")
     new_subtitle_file.clean_indexes()
     new_subtitle_file.save(file)
 
