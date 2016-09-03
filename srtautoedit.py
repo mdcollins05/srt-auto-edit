@@ -38,7 +38,7 @@ def main():
     print("'{0}' doesn't exist".format(args.srt))
 
 def parse_srt(settings, file, dry_run, verbose):
-  if verbose:
+  if verbose or dry_run:
     print("Parsing '{0}'...".format(file))
 
   try:
