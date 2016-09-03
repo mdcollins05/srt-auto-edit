@@ -79,7 +79,6 @@ def parse_srt(settings, file, dry_run, verbose):
         if (dry_run or verbose) and new_subtitle.text != original_subtitle_text:
           print("## Original text ####")
           print("{0}".format(original_subtitle_text))
-          print("#####################")
           print("## New text #########")
           print("{0}".format(new_subtitle.text))
           print("#####################")
