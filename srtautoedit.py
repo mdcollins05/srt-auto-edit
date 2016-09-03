@@ -57,6 +57,8 @@ def parse_srt(settings, file, dry_run, verbose):
         break
       if rule['type'] == 'regex':
         if rule['action'] == 'replace':
+          print(rule['pattern'])
+          print(rule['value'])
           new_subtitle.text = re.sub(rule['pattern'], rule['value'], new_subtitle.text, re.MULTILINE)
         elif rule['action'] == 'delete':
           if re.findall(rule['pattern'], new_subtitle.text, re.MULTILINE):
@@ -73,6 +75,7 @@ def parse_srt(settings, file, dry_run, verbose):
           print("Unknown action: {0}".format(rule['action']))
       else:
         print("Unknown type: {0}".format(rule['type']))
+      break
     if new_subtitle is not None:
       if new_subtitle.text != '':
         new_subtitle_file.append(new_subtitle)
