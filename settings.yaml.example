@@ -4,6 +4,12 @@
   action: replace
   value: google.com
 
+- name: Remove ellipses at start of a line
+  type: regex
+  pattern: '^[.]+'
+  action: replace
+  value: ""
+
 - name: Fix hyphens
   type: regex
   pattern: '[-]{3,}'
@@ -21,3 +27,15 @@
   pattern: '[\s]{2,}'
   action: replace
   value: " "
+
+- name: Remove spaces at the beginning of a line
+  type: regex
+  pattern: ^\s+
+  action: replace
+  value: ""
+
+- name: Remove spaces at the end of a line
+  type: regex
+  pattern: \s+$
+  action: "replace"
+  value: ""
