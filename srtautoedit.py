@@ -24,7 +24,7 @@ def main():
     settingsYaml = yaml.safe_load(settingsFile)
     settingsFile.close()
   else:
-    print("Couldn't open configuration file")
+    print("Couldn't open configuration file '{0}'".format(args.config))
     return False
 
   if os.path.isfile(args.srt):
@@ -35,7 +35,7 @@ def main():
         if file.endswith(".srt"):
           parse_srt(settingsYaml, os.path.join(root, file), args.dry_run, args.verbose)
   else:
-    print("'{0}' doesn't exist".format(args.srt))
+    print("Subtitle file/path '{0}' doesn't exist".format(args.srt))
 
 def parse_srt(settings, file, dry_run, verbose):
   if verbose or dry_run:
@@ -44,7 +44,7 @@ def parse_srt(settings, file, dry_run, verbose):
   try:
     original_subtitles = pysrt.open(file)
   except:
-    print("Couldn't open file {0}".format(file))
+    print("Couldn't open file '{0}'".format(file))
     return False
 
   new_subtitle_file = pysrt.SubRipFile()
