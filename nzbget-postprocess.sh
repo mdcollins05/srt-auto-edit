@@ -12,7 +12,7 @@
 #SETTINGSYAML_PATH=
 
 # Script arguments
-#SCRIPT_ARGS="-s -q"
+#SCRIPT_ARGS=-s -q
 
 ### NZBGET POST-PROCESSING SCRIPT                                          ###
 ##############################################################################
