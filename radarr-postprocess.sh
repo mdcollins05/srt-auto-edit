@@ -8,4 +8,4 @@ DESTINATION=$radarr_movie_path
 SCRIPT_PATH="/home/matt/srt-auto-edit" #EDIT ME!
 CONFIG_PATH="/home/matt/srt-auto-edit/settings.yaml" #EDIT ME!
 
-${SCRIPT_PATH}/srtautoedit.py -c "$CONFIG_PATH" "$DESTINATION"
+${SCRIPT_PATH}/srtautoedit.py -c "$CONFIG_PATH" -s -q "$DESTINATION"
