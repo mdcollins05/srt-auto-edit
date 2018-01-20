@@ -1,8 +1,15 @@
 ---
+# Example string replacement rule
 #- type: string
 #  pattern: www.google.com
 #  action: replace
 #  value: google.com
+
+- name: Remove formatting
+  type: regex
+  pattern: </?(font|b|i).*?>
+  action: replace
+  value: ""
 
 - name: Remove ellipses at start of a line
   type: regex
@@ -15,6 +22,12 @@
   pattern: '[-]{3,}'
   action: replace
   value: '--'
+
+- name: Remove lines with only an underscore
+  type: regex
+  pattern: ^(- )?_+
+  action: replace
+  value: ""
 
 - name: Remove unnecessary periods
   type: regex
@@ -39,9 +52,4 @@
   pattern: \s+$
   action: "replace"
   value: ""
-
-- name: Remove lines with only an underscore
-  type: regex
-  pattern: ^_+$
-  action: delete
 
