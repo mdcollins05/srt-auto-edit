@@ -2,6 +2,7 @@
 
 import yaml
 import pysrt
+import unidecode
 import re
 import argparse
 import os.path
@@ -51,8 +52,8 @@ def parse_srt(settings, file, dry_run, verbose):
   new_subtitle = None
 
   for i in range(len(original_subtitles)):
-    original_subtitle_text = original_subtitles[i].text
-    new_subtitle = pysrt.SubRipItem(i, start=original_subtitles[i].start, end=original_subtitles[i].end, text=original_subtitles[i].text)
+    original_subtitle_text = unidecode.unidecode(original_subtitles[i].text)
+    new_subtitle = pysrt.SubRipItem(i, start=original_subtitles[i].start, end=original_subtitles[i].end, text=unidecode.unidecode(original_subtitles[i].text))
 
     for rule in settings:
       if new_subtitle is None:
