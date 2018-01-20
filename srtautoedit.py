@@ -15,7 +15,9 @@ def main():
   argsparser = argparse.ArgumentParser(description="Automatically apply a set of rules to srt files")
   argsparser.add_argument("srt", help="SRT file or directory to operate on")
   argsparser.add_argument("--config", "-c", default="settings.yaml", help="Specify an alternative location to find the settings configuration file")
+  argsparser.add_argument("--summary", "-s", action="store_true", help="Provide a summary of what has changed")
   argsparser.add_argument("--dry-run", "-d", action="store_true", help="Dry run. This will not make any changes and instead will tell you what it would do")
+  argsparser.add_argument("--quiet", "-q", action="store_true", help="Quiet output. Only errors will be printed on screen")
   argsparser.add_argument("--verbose", "-v", action="store_true", help="Verbose output. Lines that have changed will be printed on screen")
 
   args = argsparser.parse_args()
@@ -29,17 +31,17 @@ def main():
     return False
 
   if os.path.isfile(args.srt):
-    parse_srt(settingsYaml, args.srt, args.dry_run, args.verbose)
+    parse_srt(settingsYaml, args.srt, args.summary, args.dry_run, args.quiet, args.verbose)
   elif os.path.isdir(args.srt):
     for root, dirs, files in os.walk(args.srt):
       for file in files:
         if file.endswith(".srt"):
-          parse_srt(settingsYaml, os.path.join(root, file), args.dry_run, args.verbose)
+          parse_srt(settingsYaml, os.path.join(root, file), args.summary, args.dry_run, args.quiet, args.verbose)
   else:
     print("Subtitle file/path '{0}' doesn't exist".format(args.srt))
 
-def parse_srt(settings, file, dry_run, verbose):
-  if verbose or dry_run:
+def parse_srt(settings, file, summary, dry_run, quiet, verbose):
+  if dry_run or verbose or summary:
     print("Parsing '{0}'...".format(file))
 
   try:
@@ -50,6 +52,9 @@ def parse_srt(settings, file, dry_run, verbose):
 
   new_subtitle_file = pysrt.SubRipFile()
   new_subtitle = None
+
+  removed_line_count = 0
+  modified_line_count = 0
 
   for i in range(len(original_subtitles)):
     original_subtitle_text = unidecode.unidecode(original_subtitles[i].text)
@@ -81,23 +86,33 @@ def parse_srt(settings, file, dry_run, verbose):
     if new_subtitle is not None:
       if new_subtitle.text != '':
         new_subtitle_file.append(new_subtitle)
+        modified_line_count += 1
         if (dry_run or verbose) and new_subtitle.text != original_subtitle_text:
-          print("## Original text ####")
-          print("{0}".format(original_subtitle_text))
-          print("## New text #########")
-          print("{0}".format(new_subtitle.text))
-          print("#####################")
+          if not quiet:
+            print("## Original text ####")
+            print("{0}".format(original_subtitle_text))
+            print("## New text #########")
+            print("{0}".format(new_subtitle.text))
+            print("#####################")
     else:
+      removed_line_count += 1
       if dry_run or verbose:
-        print("## Removed subtitle #")
-        print("{0}".format(original_subtitle_text))
-        print("#####################")
+        if not quiet:
+          print("## Removed subtitle #")
+          print("{0}".format(original_subtitle_text))
+          print("#####################")
 
   if not dry_run:
-    if verbose:
+    if not quiet or verbose:
       print("Saving subtitle file...")
     new_subtitle_file.clean_indexes()
     new_subtitle_file.save(file)
+
+  if summary or verbose:
+    print("## Summary ##")
+    print("{0} Lines removed".format(removed_line_count))
+    print("{0} Lines modified".format(modified_line_count))
+    print("#####################")
 
   return True
 
