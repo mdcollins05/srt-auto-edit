@@ -86,14 +86,15 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
     if new_subtitle is not None:
       if new_subtitle.text != '':
         new_subtitle_file.append(new_subtitle)
-        modified_line_count += 1
-        if (dry_run or verbose) and new_subtitle.text != original_subtitle_text:
-          if not quiet:
-            print("## Original text ####")
-            print("{0}".format(original_subtitle_text))
-            print("## New text #########")
-            print("{0}".format(new_subtitle.text))
-            print("#####################")
+        if new_subtitle.text != original_subtitle_text:
+          modified_line_count += 1
+          if dry_run or verbose:
+            if not quiet:
+              print("## Original text ####")
+              print("{0}".format(original_subtitle_text))
+              print("## New text #########")
+              print("{0}".format(new_subtitle.text))
+              print("#####################")
     else:
       removed_line_count += 1
       if dry_run or verbose:
