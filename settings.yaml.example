@@ -7,7 +7,23 @@
 
 - name: Remove formatting
   type: regex
-  pattern: </?(font|b|i).*?>
+  pattern: '</?(font|b|i).*?>'
+  action: replace
+  value: ""
+
+#- name: Remove sync and corrected by...
+#  type: regex
+#  pattern: '(?i)sync(ed)?,?( and| &)?( corrected)?( by| -->) (\w+)?'
+#  action: delete
+
+#- name: Remove some well-known subtitle websites
+#  type: regex
+#  pattern: '(?i)(www\.)?(addic7ed.com|tvsubtitles.net)'
+#  action: delete
+
+- name: Remove double (or more) asterisk
+  type: regex
+  pattern: '\*{2,}'
   action: replace
   value: ""
 
@@ -25,7 +41,7 @@
 
 - name: Remove lines with only an underscore
   type: regex
-  pattern: ^(- )?_+
+  pattern: '^(- )?_+'
   action: replace
   value: ""
 
@@ -43,13 +59,13 @@
 
 - name: Remove spaces at the beginning of a line
   type: regex
-  pattern: ^\s+
+  pattern: '^\s+'
   action: replace
   value: ""
 
 - name: Remove spaces at the end of a line
   type: regex
-  pattern: \s+$
+  pattern: '\s+$'
   action: "replace"
   value: ""
 
