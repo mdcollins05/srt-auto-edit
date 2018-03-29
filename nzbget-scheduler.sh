@@ -13,7 +13,13 @@
 
 # Path to srt-auto-edit settings.yaml file
 #
+# Include the file name
 #SETTINGSYAML_PATH=
+
+# Path to directory that contains the srtautoedit.py file
+#
+# No trailing slash
+#SRTAUTOEDIT_PATH=
 
 # Script arguments
 #
@@ -35,7 +41,7 @@
 ##############################################################################
 
 echo "Running scheduled srt-auto-edit on files..."
-find ${NZBPO_SCAN_DIRECTORIES} -name *.srt -cmin -${NZBPO_MAX_AGE} -exec python srtautoedit.py -c "$NZBPO_SETTINGSYAML_PATH" $NZBPO_SCRIPT_ARGS "{}" \;
+find ${NZBPO_SCAN_DIRECTORIES} -name *.srt -cmin -${NZBPO_MAX_AGE} -exec python ${NZBPO_SRTAUTOEDIT_PATH}/srtautoedit.py -c "$NZBPO_SETTINGSYAML_PATH" $NZBPO_SCRIPT_ARGS "{}" \;
 
 # Exit good no matter what
 exit 93
