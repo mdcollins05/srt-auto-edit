@@ -3,7 +3,9 @@
 ##############################################################################
 ### NZBGET POST-PROCESSING SCRIPT                                          ###
 
-# Clean up srt files with srt-auto-edit
+# SRT Auto Edit post-process script.
+#
+# Applies a configuration of rules to modify SRT files.
 
 ##############################################################################
 #### OPTIONS                                                               ###
@@ -17,9 +19,7 @@
 ### NZBGET POST-PROCESSING SCRIPT                                          ###
 ##############################################################################
 
-#Clean the mkv (will make a clean.<filename>
-
-echo "Running srt-auto-edit on files..."
+echo "Running post-process srt-auto-edit on files..."
 python srtautoedit.py -c "$NZBPO_SETTINGSYAML_PATH" $NZBPO_SCRIPT_ARGS "$NZBPP_DIRECTORY"
 
 # Exit good no matter what
