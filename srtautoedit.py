@@ -104,10 +104,15 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
           print("#####################")
 
   if not dry_run:
-    if not quiet or verbose:
-      print("Saving subtitle file...")
-    new_subtitle_file.clean_indexes()
-    new_subtitle_file.save(file)
+    if modified_line_count != 0 or removed_line_count != 0:
+      if not quiet or verbose:
+        print("Saving subtitle file...")
+      new_subtitle_file.clean_indexes()
+      new_subtitle_file.save(file)
+    else:
+      if not quiet or verbose:
+        print("No changes to save")
+
 
   if summary or verbose:
     print("## Summary ##")
