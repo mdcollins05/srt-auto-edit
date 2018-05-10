@@ -14,7 +14,7 @@ def main():
 
   argsparser = argparse.ArgumentParser(description="Automatically apply a set of rules to srt files")
   argsparser.add_argument("srt", help="SRT file or directory to operate on")
-  argsparser.add_argument("--config", "-c", default="settings.yaml", help="Specify an alternative location to find the settings configuration file")
+  argsparser.add_argument("--config", "-c", default="settings.yaml", help="Specify the path to the settings configuration file")
   argsparser.add_argument("--summary", "-s", action="store_true", help="Provide a summary of what has changed")
   argsparser.add_argument("--dry-run", "-d", action="store_true", help="Dry run. This will not make any changes and instead will tell you what it would do")
   argsparser.add_argument("--quiet", "-q", action="store_true", help="Quiet output. Only errors will be printed on screen")
