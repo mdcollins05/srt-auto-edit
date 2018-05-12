@@ -1,15 +1,15 @@
-#SRTAutoEdit
+# SRTAutoEdit
 
 Apply a set of rules to your SRT (subtitle) files. You can remove formatting, remove/replace certain words or remove whole lines.
 
-##Installation
+## Installation
 
 1. Clone the repo
 2. Install dependencies (`pip install -r requirements.txt`)
 3. Optionally, install a post-process script by copying it to the appropriate folder and editing the file
 4. Copy `settings.yaml.example` to `settings.yaml` and modify the rules
 
-##Manual usage
+## Manual usage
 
 You can manually run `srtautoedit.py` from the command line.
 
@@ -36,7 +36,7 @@ optional arguments:
                         printed on screen
 ```
 
-##The `settings.yaml` file format
+## The `settings.yaml` file format
 
 Each rule is in the following format.
 
@@ -49,7 +49,7 @@ Each rule is in the following format.
 ```
 
 - `name` is simply the name of the rule. It isn't used for much other than for when reporting regex compilation errors and for your benefit.
-- `type` is the type of rule. `regex` and `string` are the only types supported. 
+- `type` is the type of rule. `regex` and `string` are the only types supported.
 - `pattern` is the regex or string search value to look for. Check your regex on a site such as regex101.com or something similar.
 - `action` determines what to do with the match. `replace` and `delete` are the available actions. `delete` will remove the subtitle entry.
 - `value` is what to replace the match with when using the replace action.
