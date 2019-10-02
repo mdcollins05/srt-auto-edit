@@ -28,6 +28,12 @@ def main():
     print("Couldn't open configuration file '{0}'".format(args.config))
     return False
 
+  if len(settingsYaml) > 0:
+    validate_rules(settingsYaml)
+  else:
+    print("You don't have any rules specified in your configuration file '{0}'".format(args.config))
+    return False
+
   if os.path.isfile(args.srt):
     parse_srt(settingsYaml, args.srt, args.summary, args.dry_run, args.quiet, args.verbose)
   elif os.path.isdir(args.srt):
@@ -95,23 +101,21 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
           modified_line_count += 1
           if dry_run or verbose:
             if not quiet:
-              print("## Original text ####")
-              print("{0}".format(original_subtitle_text))
-              print("## New text #########")
-              print("{0}".format(new_subtitle.content))
-              print("#####################")
+              print("Original text")
+              print("  {0}".format(original_subtitle_text))
+              print("New text")
+              print("  {0}".format(new_subtitle.content))
     else:
       removed_line_count += 1
       if dry_run or verbose:
         if not quiet:
-          print("## Removed subtitle #")
-          print("{0}".format(original_subtitle_text))
-          print("#####################")
+          print("Removed text")
+          print("  {0}".format(original_subtitle_text))
 
   if not dry_run:
     if modified_line_count != 0 or removed_line_count != 0:
       if not quiet or verbose:
-        print("Saving subtitle file...")
+        print("Saving subtitle file {0}...".format(file))
       new_subtitle_file = list(srt.sort_and_reindex(new_subtitle_file))
       with open(file, 'w',  encoding='utf-8') as filehandler:
         filehandler.write(srt.compose(new_subtitle_file))
@@ -119,16 +123,13 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
       if not quiet or verbose:
         print("No changes to save")
 
-
   if summary or verbose:
-    print("## Summary ##")
-    print("{0} Lines removed".format(removed_line_count))
-    print("{0} Lines modified".format(modified_line_count))
-    print("#####################")
+    print("Summary: {0} Lines modified; {1} Lines removed; '{2}'".format(modified_line_count, removed_line_count, file))
 
   return True
 
-def validate_regex(settings):
+def validate_rules(settings):
+  #TODO: Add more validation for all the expected fields and rule types
   for rule in settings:
     if type == "regex":
       compile_regex(rule['pattern'])
