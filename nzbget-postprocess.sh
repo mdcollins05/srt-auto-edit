@@ -27,7 +27,7 @@
 ##############################################################################
 
 echo "Running post-process srt-auto-edit on files..."
-python ${NZBPO_SRTAUTOEDIT_PATH}/srtautoedit.py -c "$NZBPO_SETTINGSYAML_PATH" $NZBPO_SCRIPT_ARGS "$NZBPP_DIRECTORY"
+${NZBPO_SRTAUTOEDIT_PATH}/srtautoedit.py -c "$NZBPO_SETTINGSYAML_PATH" $NZBPO_SCRIPT_ARGS "$NZBPP_DIRECTORY"
 
 # Exit good no matter what
 exit 93

@@ -41,7 +41,7 @@
 ##############################################################################
 
 echo "Running scheduled srt-auto-edit on files..."
-find ${NZBPO_SCAN_DIRECTORIES} -name *.srt -cmin -${NZBPO_MAX_AGE} -exec python ${NZBPO_SRTAUTOEDIT_PATH}/srtautoedit.py -c "$NZBPO_SETTINGSYAML_PATH" $NZBPO_SCRIPT_ARGS "{}" \;
+find ${NZBPO_SCAN_DIRECTORIES} -name *.srt -cmin -${NZBPO_MAX_AGE} -exec ${NZBPO_SRTAUTOEDIT_PATH}/srtautoedit.py -c "$NZBPO_SETTINGSYAML_PATH" $NZBPO_SCRIPT_ARGS "{}" \;
 
 # Exit good no matter what
 exit 93
