@@ -1,13 +1,11 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import yaml
-import pysrt
-import unidecode
 import re
 import argparse
 import os.path
 import sys
-
+import srt
 
 def main():
   settingsYaml = {}
@@ -45,20 +43,27 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
     print("Parsing '{0}'...".format(file))
 
   try:
-    original_subtitles = pysrt.open(file)
+    original_subtitles = None
+    with open(file, 'r',  encoding='utf-8') as filehandler:
+      original_subtitles = filehandler.read()
   except:
     print("Couldn't open file '{0}'".format(file))
     return False
 
-  new_subtitle_file = pysrt.SubRipFile()
+  try:
+    original_subtitles = list(srt.parse(original_subtitles))
+  except:
+    print("Trouble parsing subtitles in '{0}'".format(file))
+
+  new_subtitle_file = list()
   new_subtitle = None
 
   removed_line_count = 0
   modified_line_count = 0
 
   for i in range(len(original_subtitles)):
-    original_subtitle_text = unidecode.unidecode(original_subtitles[i].text)
-    new_subtitle = pysrt.SubRipItem(i, start=original_subtitles[i].start, end=original_subtitles[i].end, text=unidecode.unidecode(original_subtitles[i].text))
+    original_subtitle_text = original_subtitles[i].content
+    new_subtitle = srt.Subtitle(i, start=original_subtitles[i].start, end=original_subtitles[i].end, content=original_subtitles[i].content, proprietary=original_subtitles[1].proprietary)
 
     for rule in settings:
       if new_subtitle is None:
@@ -66,17 +71,17 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
 
       if rule['type'] == 'regex':
         if rule['action'] == 'replace':
-          new_subtitle.text = re.sub(rule['pattern'], rule['value'], new_subtitle.text, re.MULTILINE)
+          new_subtitle.content = re.sub(rule['pattern'], rule['value'], new_subtitle.content, re.MULTILINE)
         elif rule['action'] == 'delete':
-          if re.findall(rule['pattern'], new_subtitle.text, re.MULTILINE):
+          if re.findall(rule['pattern'], new_subtitle.content, re.MULTILINE):
             new_subtitle = None
         else:
           print("Unknown action: {0}".format(rule['action']))
       elif rule['type'] == 'string':
         if rule['action'] == 'replace':
-          new_subtitle.text.replace(rule['pattern'], rule['value'])
+          new_subtitle.content.replace(rule['pattern'], rule['value'])
         elif rule['action'] == 'delete':
-          if new_subtitle.text.find(rule['pattern']) == -1:
+          if new_subtitle.content.find(rule['pattern']) == -1:
             new_subtitle = None
         else:
           print("Unknown action: {0}".format(rule['action']))
@@ -84,16 +89,16 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
         print("Unknown type: {0}".format(rule['type']))
 
     if new_subtitle is not None:
-      if new_subtitle.text != '':
+      if new_subtitle.content != '':
         new_subtitle_file.append(new_subtitle)
-        if new_subtitle.text != original_subtitle_text:
+        if new_subtitle.content != original_subtitle_text:
           modified_line_count += 1
           if dry_run or verbose:
             if not quiet:
               print("## Original text ####")
               print("{0}".format(original_subtitle_text))
               print("## New text #########")
-              print("{0}".format(new_subtitle.text))
+              print("{0}".format(new_subtitle.content))
               print("#####################")
     else:
       removed_line_count += 1
@@ -107,8 +112,9 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
     if modified_line_count != 0 or removed_line_count != 0:
       if not quiet or verbose:
         print("Saving subtitle file...")
-      new_subtitle_file.clean_indexes()
-      new_subtitle_file.save(file)
+      new_subtitle_file = list(srt.sort_and_reindex(new_subtitle_file))
+      with open(file, 'w',  encoding='utf-8') as filehandler:
+        filehandler.write(srt.compose(new_subtitle_file))
     else:
       if not quiet or verbose:
         print("No changes to save")
@@ -129,7 +135,7 @@ def validate_regex(settings):
 
 def compile_regex(regex):
   try:
-   return re.compile(regex, re.IGNORECASE)
+    return re.compile(regex, re.IGNORECASE)
   except re.error:
     print("Error with regex: {0}".format(regex))
 
