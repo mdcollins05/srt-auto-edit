@@ -99,10 +99,15 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
         print("Couldn't open file '{0}'".format(file))
         return False
 
+    # Temporary fix until https://github.com/cdown/srt/issues/55 is fixed
+    original_subtitles = original_subtitles.replace("9999\n00:00:0,500 --> 00:00:2,00\n<font color=\"#ffff00\" size=14>www.tvsubtitles.net</font>", "")
+
     try:
         original_subtitles = list(srt.parse(original_subtitles))
     except:
         print("Trouble parsing subtitles in '{0}'".format(file))
+        # print(sys.exc_info()[0])
+        return False
 
     new_subtitle_file = list()
     new_subtitle = None
