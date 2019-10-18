@@ -68,4 +68,3 @@
   pattern: '\s+$'
   action: "replace"
   value: ""
-

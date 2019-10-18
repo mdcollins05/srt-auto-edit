@@ -6,6 +6,7 @@ set -euo pipefail
 SCRIPT_PATH="/home/matt/srt-auto-edit" #EDIT ME!
 CONFIG_PATH="/home/matt/srt-auto-edit/settings.yaml" #EDIT ME!
 
+# shellcheck disable=SC2001
 files=$(echo "${MH_FILES%%,*}" | sed 's/[]"[]//g')
 
 for file in "${files%%.*}"* ; do

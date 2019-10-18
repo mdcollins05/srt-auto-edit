@@ -4,8 +4,9 @@ IFS=$'\n\t'
 
 # Run srt-auto-edit against any subtitle files included with video file for Sonarr
 
-DESTINATION=$sonarr_series_path
+# shellcheck disable=SC2154
+DESTINATION=${sonarr_series_path}
 SCRIPT_PATH="/home/matt/srt-auto-edit" #EDIT ME!
 CONFIG_PATH="/home/matt/srt-auto-edit/settings.yaml" #EDIT ME!
 
-${SCRIPT_PATH}/srtautoedit.py -c "$CONFIG_PATH" -s -q "$DESTINATION"
+${SCRIPT_PATH}/srtautoedit.py -c "${CONFIG_PATH}" -s -q "${DESTINATION}"
