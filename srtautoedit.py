@@ -149,8 +149,10 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                     if new_subtitle.content.find(rule["pattern"]) == -1:
                         new_subtitle = None
                 else:
+                    print("Error in rule: {0}".format(rule["name"]))
                     print("Unknown action: {0}".format(rule["action"]))
             else:
+                print("Error in rule: {0}".format(rule["name"]))
                 print("Unknown type: {0}".format(rule["type"]))
 
         if new_subtitle is not None:
@@ -160,16 +162,18 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                     modified_line_count += 1
                     if dry_run or verbose:
                         if not quiet:
-                            print("Original text")
+                            print("|Original text")
                             print("  {0}".format(original_subtitle_text))
-                            print("New text")
+                            print("|New text")
                             print("  {0}".format(new_subtitle.content))
+                            print("|By {0}".format(rule["name"]))
         else:
             removed_line_count += 1
             if dry_run or verbose:
                 if not quiet:
-                    print("Removed text")
+                    print("|Removed text")
                     print("  {0}".format(original_subtitle_text))
+                    print("|By {0}".format(rule["name"]))
 
     if not dry_run:
         if modified_line_count != 0 or removed_line_count != 0:
