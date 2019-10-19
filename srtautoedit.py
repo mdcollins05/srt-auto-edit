@@ -99,9 +99,6 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
         print("Couldn't open file '{0}'".format(file))
         return False
 
-    # Temporary fix until https://github.com/cdown/srt/issues/55 is fixed
-    original_subtitles = original_subtitles.replace("9999\n00:00:0,500 --> 00:00:2,00\n<font color=\"#ffff00\" size=14>www.tvsubtitles.net</font>", "")
-
     try:
         original_subtitles = list(srt.parse(original_subtitles))
     except:
@@ -166,14 +163,14 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                             print("  {0}".format(original_subtitle_text))
                             print("|New text")
                             print("  {0}".format(new_subtitle.content))
-                            print("|By {0}".format(rule["name"]))
+                            print("|By: {0}".format(rule["name"]))
         else:
             removed_line_count += 1
             if dry_run or verbose:
                 if not quiet:
                     print("|Removed text")
                     print("  {0}".format(original_subtitle_text))
-                    print("|By {0}".format(rule["name"]))
+                    print("|By: {0}".format(rule["name"]))
 
     if not dry_run:
         if modified_line_count != 0 or removed_line_count != 0:

@@ -1,6 +1,6 @@
 # SRTAutoEdit
 
-Apply a set of rules to your SRT (subtitle) files. You can remove formatting, remove/replace certain words or remove whole lines.
+Apply a set of rules to your SRT (subtitle) files. You can remove formatting, remove/replace certain words or remove whole entries.
 
 ## Installation
 
