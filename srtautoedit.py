@@ -163,20 +163,20 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                             print("  {0}".format(original_subtitle_text))
                             print("|New text")
                             print("  {0}".format(new_subtitle.content))
-                            print("|By: {0}".format(rule["name"]))
+                            #print("|By: {0}".format(rule["name"]))  # TODO: See if we can get the correct rule name
         else:
             removed_line_count += 1
             if dry_run or verbose:
                 if not quiet:
                     print("|Removed text")
                     print("  {0}".format(original_subtitle_text))
-                    print("|By: {0}".format(rule["name"]))
+                    #print("|By: {0}".format(rule["name"]))  # TODO: See if we can get the correct rule name
 
     if not dry_run:
-        if modified_line_count != 0 or removed_line_count != 0:
+        new_subtitle_file = list(srt.sort_and_reindex(new_subtitle_file))
+        if modified_line_count != 0 or removed_line_count != 0 or new_subtitle_file != original_subtitles:
             if not quiet or verbose:
                 print("Saving subtitle file {0}...".format(file))
-            new_subtitle_file = list(srt.sort_and_reindex(new_subtitle_file))
             with open(file, "w", encoding="utf-8") as filehandler:
                 filehandler.write(srt.compose(new_subtitle_file))
         else:
@@ -209,3 +209,4 @@ def compile_regex(regex):
 
 if __name__ == "__main__":
     sys.exit(main())
+
