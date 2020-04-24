@@ -4,6 +4,7 @@ import argparse
 import os.path
 import re
 import sys
+import textwrap
 
 import srt
 import yaml
@@ -91,7 +92,7 @@ def main():
 
 def parse_srt(settings, file, summary, dry_run, quiet, verbose):
     if dry_run or verbose or summary:
-        print("Parsing '{0}'...".format(file))
+        print("Parsing '{0}'...\n".format(file))
 
     try:
         original_subtitles = None
@@ -130,6 +131,8 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
             if new_subtitle is None:
                 break
 
+            line_before_rule_run = new_subtitle.content
+
             if rule["type"] == "regex":
                 if rule["action"] == "replace":
                     new_subtitle.content = re.sub(
@@ -138,27 +141,28 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                         new_subtitle.content,
                         re.MULTILINE,
                     )
-                    line_history.append(rule["name"])
                 elif rule["action"] == "delete":
                     if re.findall(rule["pattern"], new_subtitle.content, re.MULTILINE):
                         new_subtitle = None
-                        line_history.append(rule["name"])
                 else:
                     print("Unknown action: {0}".format(rule["action"]))
             elif rule["type"] == "string":
                 if rule["action"] == "replace":
                     new_subtitle.content.replace(rule["pattern"], rule["value"])
-                    line_history.append(rule["name"])
                 elif rule["action"] == "delete":
                     if new_subtitle.content.find(rule["pattern"]) == -1:
                         new_subtitle = None
-                        line_history.append(rule["name"])
                 else:
                     print("Error in rule: {0}".format(rule["name"]))
                     print("Unknown action: {0}".format(rule["action"]))
             else:
                 print("Error in rule: {0}".format(rule["name"]))
                 print("Unknown type: {0}".format(rule["type"]))
+
+            if new_subtitle is None:
+                line_history.append(rule["name"])
+            elif new_subtitle.content != line_before_rule_run:
+                line_history.append(rule["name"])
 
         if new_subtitle is not None:
             if new_subtitle.content != "":
@@ -167,18 +171,19 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                     modified_line_count += 1
                     if dry_run or verbose:
                         if not quiet:
-                            print("|Original text")
-                            print("  {0}".format(original_subtitle_text))
-                            print("|New text")
-                            print("  {0}".format(new_subtitle.content))
-                            print("|By: {0}".format(", ".join(map(str, line_history))))
+                            print("{0}".format(wrap_sub(original_subtitle_text, "-")))
+                            print("{0}".format(wrap_sub(new_subtitle.content, "+")))
+                            print(
+                                "|By rule(s): {0}\n".format(
+                                    ", ".join(map(str, line_history))
+                                )
+                            )
         else:
             removed_line_count += 1
             if dry_run or verbose:
                 if not quiet:
-                    print("|Removed text")
-                    print("  {0}".format(original_subtitle_text))
-                    print("|By: {0}".format(line_history[-1]))
+                    print("{0}".format(wrap_sub(original_subtitle_text, "-")))
+                    print("|By rule: {0}\n".format(line_history[-1]))
 
     if not dry_run:
         new_subtitle_file = list(srt.sort_and_reindex(new_subtitle_file))
@@ -188,7 +193,7 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
             or new_subtitle_file != original_subtitles
         ):
             if not quiet or verbose:
-                print("Saving subtitle file {0}...".format(file))
+                print("Saving subtitle file {0}...\n".format(file))
             with open(file, "w", encoding="utf-8") as filehandler:
                 filehandler.write(srt.compose(new_subtitle_file))
         else:
@@ -217,6 +222,10 @@ def compile_regex(regex):
         return re.compile(regex, re.IGNORECASE)
     except re.error:
         print("Error with regex: {0}".format(regex))
+
+
+def wrap_sub(content, prefix):
+    return textwrap.indent(content, prefix + "  ")
 
 
 if __name__ == "__main__":
