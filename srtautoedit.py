@@ -5,6 +5,7 @@ import os.path
 import re
 import sys
 import textwrap
+import fnmatch
 
 import srt
 import yaml
@@ -123,6 +124,10 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
         for rule in settings["rules"]:
             if new_subtitle is None:
                 break
+
+            if "only_if_match" in rule:
+                if not fnmatch.fnmatch(file, rule["only_if_match"]):
+                    continue
 
             line_before_rule_run = new_subtitle.content
 

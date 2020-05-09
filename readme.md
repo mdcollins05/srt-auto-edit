@@ -62,5 +62,6 @@ Each rule is in the following format under the `rules:` heading.
 - `pattern` is the regex or string search value to look for. Check your regex on a site such as regex101.com or something similar.
 - `action` determines what to do with the match. `replace` and `delete` are the available actions. `delete` will remove the subtitle entry.
 - `value` is what to replace the match with when using the replace action.
+- `only_if_match` optionally, only run the rule against file names that match this pattern (`*/tv/*` or `*/Show Name/*`) Case is important!
 
 Be sure to test your settings file with the `--verbose` and/or `--show-rules` command line options!
