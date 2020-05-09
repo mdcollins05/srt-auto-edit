@@ -52,16 +52,25 @@ def main():
 
     args = argsparser.parse_args()
 
-    if os.path.isfile(args.config):
-        settingsFile = open(args.config)
-        settingsYaml = yaml.safe_load(settingsFile)
-        settingsFile.close()
+    settingsYaml = load_config(args.config)
+
+    if "rules" not in settingsYaml:
+        settingsYaml["rules"] = []
     else:
-        print("Couldn't open configuration file '{0}'".format(args.config))
-        return False
+        settingsYaml["rules"] = tag_rules(settingsYaml["rules"], args.config)
+
+    if "rules_directory" in settingsYaml:
+        dir = settingsYaml["rules_directory"]
+        if os.path.isdir(dir):
+            for file in sorted(os.listdir(dir)):
+                full_file_path = os.path.join(dir, file)
+                if file.endswith(".yml") or file.endswith(".yaml"):
+                    rules = load_config(full_file_path)
+                    if len(rules) > 0:
+                        settingsYaml["rules"].extend(tag_rules(rules, full_file_path))
 
     if len(settingsYaml) > 0:
-        validate_rules(settingsYaml)
+        validate_rules(settingsYaml["rules"])
     else:
         print(
             "You don't have any rules specified in your configuration file '{0}'".format(
@@ -127,7 +136,7 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
 
         line_history = []
 
-        for rule in settings:
+        for rule in settings["rules"]:
             if new_subtitle is None:
                 break
 
@@ -185,7 +194,7 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
             or new_subtitle_file != original_subtitles
         ):
             print()  # Yes, a blank line
-            if modified_line_count == 0 and removed_line_count == 0:
+            if modified_line_count == 0 and removed_line_count == 0 and not quiet:
                 print(
                     "Only changes to sorting and indexing found; No changes to subtitles detected."
                 )
@@ -210,21 +219,22 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
     return True
 
 
-def validate_rules(settings):
+def validate_rules(rules):
     errors = False
-    for rule in settings:
+    for rule in rules:
         if rule["type"] == "regex":
             if not compile_regex(rule["pattern"]):
                 errors = True
                 rule_error(
                     rule["name"],
+                    rule["from_file"],
                     "Regex isn't valid. Please verify it's correct. https://regex101.com/ is a good site.",
                 )
         elif rule["type"] == "string":
             if "pattern" not in rule:
                 errors = True
                 rule_error(
-                    rule["name"], "You must define the string to find as the pattern."
+                    rule["name"], rule["from_file"], "You must define the string to find as the pattern."
                 )
         else:
             errors = True
@@ -233,13 +243,21 @@ def validate_rules(settings):
         if rule["action"] == "replace":
             if "value" not in rule:
                 errors = True
-                rule_error(rule["name"], "You must define the value to replace.")
+                rule_error(rule["name"], rule["from_file"], "You must define the value to replace.")
         elif rule["action"] != "delete":
             errors = True
-            rule_error(rule["name"], "Unknown rule action: {0}".format(rule["action"]))
+            rule_error(rule["name"], rule["from_file"], "Unknown rule action: {0}".format(rule["action"]))
 
     if errors:
         return False
+
+def tag_rules(rules, filename):
+    new_rules = rules
+    if len(rules) > 0:
+        for i in range(len(rules)):
+            new_rules[i]["from_file"] = filename
+
+    return new_rules
 
 
 def compile_regex(regex):
@@ -249,13 +267,28 @@ def compile_regex(regex):
         return False
 
 
-def rule_error(rule_name, message):
-    print("\nError in rule: {0}".format(rule_name))
+def rule_error(rule_name, rule_file, message):
+    print("\nError in rule: '{0}' From: '{1}'".format(rule_name, rule_file))
     print(message)
 
 
 def wrap_sub(content, prefix):
     return textwrap.indent(content, prefix + "  ")
+
+
+def load_config(config):
+    if os.path.isfile(config):
+        settingsFile = open(config)
+        settingsYaml = yaml.safe_load(settingsFile)
+        settingsFile.close()
+
+        if not settingsYaml:
+            settingsYaml = []
+
+        return settingsYaml
+    else:
+        print("Couldn't open configuration file '{0}'".format(config))
+        return False
 
 
 if __name__ == "__main__":
