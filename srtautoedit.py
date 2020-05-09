@@ -92,20 +92,20 @@ def main():
 
 def parse_srt(settings, file, summary, dry_run, quiet, verbose):
     if dry_run or verbose or summary:
-        print("Parsing '{0}'...\n".format(file))
+        print("Parsing '{0}'...".format(file))
 
     try:
         original_subtitles = None
         with open(file, "r", encoding="utf-8") as filehandler:
             original_subtitles = filehandler.read()
     except:
-        print("Couldn't open file '{0}'".format(file))
+        print("\nCouldn't open file '{0}'".format(file))
         return False
 
     try:
         original_subtitles = list(srt.parse(original_subtitles))
     except:
-        print("Trouble parsing subtitles in '{0}'".format(file))
+        print("\nTrouble parsing subtitles in '{0}'".format(file))
         # print(sys.exc_info()[0])
         return False
 
@@ -145,6 +145,7 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                     if re.findall(rule["pattern"], new_subtitle.content, re.MULTILINE):
                         new_subtitle = None
                 else:
+                    print("\nError in rule: {0}".format(rule["name"]))
                     print("Unknown action: {0}".format(rule["action"]))
             elif rule["type"] == "string":
                 if rule["action"] == "replace":
@@ -153,10 +154,10 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                     if new_subtitle.content.find(rule["pattern"]) == -1:
                         new_subtitle = None
                 else:
-                    print("Error in rule: {0}".format(rule["name"]))
+                    print("\nError in rule: {0}".format(rule["name"]))
                     print("Unknown action: {0}".format(rule["action"]))
             else:
-                print("Error in rule: {0}".format(rule["name"]))
+                print("\nError in rule: {0}".format(rule["name"]))
                 print("Unknown type: {0}".format(rule["type"]))
 
             if new_subtitle is None:
@@ -171,10 +172,10 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                     modified_line_count += 1
                     if dry_run or verbose:
                         if not quiet:
-                            print("{0}".format(wrap_sub(original_subtitle_text, "-")))
+                            print("\n{0}".format(wrap_sub(original_subtitle_text, "-")))
                             print("{0}".format(wrap_sub(new_subtitle.content, "+")))
                             print(
-                                "|By rule(s): {0}\n".format(
+                                "|By rule(s): {0}".format(
                                     ", ".join(map(str, line_history))
                                 )
                             )
@@ -182,8 +183,8 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
             removed_line_count += 1
             if dry_run or verbose:
                 if not quiet:
-                    print("{0}".format(wrap_sub(original_subtitle_text, "-")))
-                    print("|By rule: {0}\n".format(line_history[-1]))
+                    print("\n{0}".format(wrap_sub(original_subtitle_text, "-")))
+                    print("|By rule: {0}".format(line_history[-1]))
 
     if not dry_run:
         new_subtitle_file = list(srt.sort_and_reindex(new_subtitle_file))
@@ -192,20 +193,26 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
             or removed_line_count != 0
             or new_subtitle_file != original_subtitles
         ):
+            print() # Yes, a blank line
+            if (modified_line_count == 0 and removed_line_count == 0):
+                print("Only changes to sorting and indexing found; No changes to subtitles detected.")
             if not quiet or verbose:
                 print("Saving subtitle file {0}...\n".format(file))
             with open(file, "w", encoding="utf-8") as filehandler:
                 filehandler.write(srt.compose(new_subtitle_file))
         else:
             if not quiet or verbose:
-                print("No changes to save")
+                print("No changes to save\n")
 
     if summary or verbose:
+        if dry_run:
+            print() # A blank line
         print(
             "Summary: {0} Lines modified; {1} Lines removed; '{2}'".format(
                 modified_line_count, removed_line_count, file
             )
         )
+        print() # Yes, another one
 
     return True
 
