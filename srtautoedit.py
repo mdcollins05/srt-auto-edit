@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
+import fnmatch
 import os.path
 import re
 import sys
 import textwrap
-import fnmatch
 
 import srt
 import yaml
@@ -43,7 +43,6 @@ def main():
         )
         return False
 
-
     if args.show_rules:
         last_from_file = ""
         for rule in settingsYaml["rules"]:
@@ -54,7 +53,6 @@ def main():
                 print("Below rules are from file: {0}".format(from_file))
                 last_from_file = from_file
             print("Rule name: {0}".format(rule["name"]))
-
 
     for srt in args.srt:
         if args.show_rules:
@@ -210,10 +208,10 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
             )
         else:
             print(
-            "Summary: {0} Lines modified; {1} Lines removed; '{2}'".format(
-                modified_line_count, removed_line_count, file
+                "Summary: {0} Lines modified; {1} Lines removed; '{2}'".format(
+                    modified_line_count, removed_line_count, file
+                )
             )
-        )
         print()
 
     return True
@@ -223,7 +221,9 @@ def parse_args():
     argsparser = argparse.ArgumentParser(
         description="Automatically apply a set of rules to subtitle(srt) files"
     )
-    argsparser.add_argument("srt", nargs='*', help="One or more subtitle files or directories to operate on")
+    argsparser.add_argument(
+        "srt", nargs="*", help="One or more subtitle files or directories to operate on"
+    )
     argsparser.add_argument(
         "--apply-changes",
         "-a",
@@ -238,10 +238,7 @@ def parse_args():
         help="Specify the path to the settings configuration file (defaults to settings.yaml)",
     )
     argsparser.add_argument(
-        "--summary",
-        "-s",
-        action="store_true",
-        help="Provide a summary of the changes",
+        "--summary", "-s", action="store_true", help="Provide a summary of the changes"
     )
     argsparser.add_argument(
         "--show-rules",
@@ -281,7 +278,9 @@ def validate_rules(rules):
             if "pattern" not in rule:
                 errors = True
                 rule_error(
-                    rule["name"], rule["from_file"], "You must define the string to find as the pattern."
+                    rule["name"],
+                    rule["from_file"],
+                    "You must define the string to find as the pattern.",
                 )
         else:
             errors = True
@@ -290,13 +289,22 @@ def validate_rules(rules):
         if rule["action"] == "replace":
             if "value" not in rule:
                 errors = True
-                rule_error(rule["name"], rule["from_file"], "You must define the value to replace.")
+                rule_error(
+                    rule["name"],
+                    rule["from_file"],
+                    "You must define the value to replace.",
+                )
         elif rule["action"] != "delete":
             errors = True
-            rule_error(rule["name"], rule["from_file"], "Unknown rule action: {0}".format(rule["action"]))
+            rule_error(
+                rule["name"],
+                rule["from_file"],
+                "Unknown rule action: {0}".format(rule["action"]),
+            )
 
     if errors:
         return False
+
 
 def tag_rules(rules, filename):
     new_rules = rules
