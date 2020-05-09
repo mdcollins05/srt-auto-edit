@@ -209,40 +209,40 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
 
 
 def validate_rules(settings):
-    errors = false
+    errors = False
     for rule in settings:
-        if type == "regex":
+        if rule['type'] == "regex":
             if not compile_regex(rule['pattern']):
-                errors = true
+                errors = True
                 rule_error(rule['name'], "Regex isn't valid. Please verify it's correct. https://regex101.com/ is a good site.")
-        elif type == "string":
-            if pattern not in rule:
-                errors = true
+        elif rule['type'] == "string":
+            if 'pattern' not in rule:
+                errors = True
                 rule_error(rule['name'], "You must define the string to find as the pattern.")
         else:
-            errors = true
+            errors = True
             rule_error(rule['name'], "Unknown rule type: {0}".format(rule['type']))
 
-        if action == "replace":
-            if value not in rule:
-                errors = true
+        if rule['action'] == "replace":
+            if 'value' not in rule:
+                errors = True
                 rule_error(rule['name'], "You must define the value to replace.")
-        elif action != "delete":
-            errors = true
+        elif rule['action'] != "delete":
+            errors = True
             rule_error(rule['name'], "Unknown rule action: {0}".format(rule['action']))
 
     if errors:
-        return false
+        return False
 
 
 def compile_regex(regex):
     try:
         return re.compile(regex, re.MULTILINE)
     except re.error:
-        return false
+        return False
 
 
-def rule_error(rule_name, message)
+def rule_error(rule_name, message):
     print("\nError in rule: {0}".format(rule_name))
     print(message)
 
