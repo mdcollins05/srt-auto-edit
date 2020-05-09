@@ -9,48 +9,11 @@ import textwrap
 import srt
 import yaml
 
-# TODO: Add a settings.d directory support. All yaml files in the directory are loaded up and merged.
-
 
 def main():
     settingsYaml = {}
 
-    argsparser = argparse.ArgumentParser(
-        description="Automatically apply a set of rules to srt files"
-    )
-    argsparser.add_argument("srt", help="SRT file or directory to operate on")
-    argsparser.add_argument(
-        "--config",
-        "-c",
-        default="settings.yaml",
-        help="Specify the path to the settings configuration file",
-    )
-    argsparser.add_argument(
-        "--summary",
-        "-s",
-        action="store_true",
-        help="Provide a summary of what has changed",
-    )
-    argsparser.add_argument(
-        "--dry-run",
-        "-d",
-        action="store_true",
-        help="Dry run. This will not make any changes and instead will tell you what it would do",
-    )
-    argsparser.add_argument(
-        "--quiet",
-        "-q",
-        action="store_true",
-        help="Quiet output. Only errors will be printed on screen",
-    )
-    argsparser.add_argument(
-        "--verbose",
-        "-v",
-        action="store_true",
-        help="Verbose output. Lines that have changed will be printed on screen",
-    )
-
-    args = argsparser.parse_args()
+    args = parse_args()
 
     settingsYaml = load_config(args.config)
 
@@ -79,24 +42,44 @@ def main():
         )
         return False
 
-    if os.path.isfile(args.srt):
-        parse_srt(
-            settingsYaml, args.srt, args.summary, args.dry_run, args.quiet, args.verbose
-        )
-    elif os.path.isdir(args.srt):
-        for root, dirs, files in os.walk(args.srt):
-            for file in files:
-                if file.endswith(".srt"):
-                    parse_srt(
-                        settingsYaml,
-                        os.path.join(root, file),
-                        args.summary,
-                        args.dry_run,
-                        args.quiet,
-                        args.verbose,
-                    )
-    else:
-        print("Subtitle file/path '{0}' doesn't exist".format(args.srt))
+
+    if args.show_rules:
+        last_from_file = ""
+        for rule in settingsYaml["rules"]:
+            from_file = rule["from_file"]
+            if last_from_file != from_file:
+                if last_from_file != "":
+                    print()
+                print("Below rules are from file: {0}".format(from_file))
+                last_from_file = from_file
+            print("Rule name: {0}".format(rule["name"]))
+
+
+    for srt in args.srt:
+        if args.show_rules:
+            print()
+        if os.path.isfile(srt):
+            parse_srt(
+                settingsYaml, srt, args.summary, args.dry_run, args.quiet, args.verbose
+            )
+        elif os.path.isdir(srt):
+            for root, dirs, files in os.walk(srt):
+                for file in files:
+                    if file.endswith(".srt"):
+                        parse_srt(
+                            settingsYaml,
+                            os.path.join(root, file),
+                            args.summary,
+                            args.dry_run,
+                            args.quiet,
+                            args.verbose,
+                        )
+        else:
+            print("Subtitle file/path '{0}' doesn't exist".format(args.srt))
+
+    if not args.show_rules and len(args.srt) == 0:
+        print()
+        print("No subtitle files or directories specified.")
 
 
 def parse_srt(settings, file, summary, dry_run, quiet, verbose):
@@ -108,14 +91,15 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
         with open(file, "r", encoding="utf-8") as filehandler:
             original_subtitles = filehandler.read()
     except:
-        print("\nCouldn't open file '{0}'".format(file))
+        print()
+        print("Couldn't open file '{0}'".format(file))
         return False
 
     try:
         original_subtitles = list(srt.parse(original_subtitles))
     except:
-        print("\nTrouble parsing subtitles in '{0}'".format(file))
-        # print(sys.exc_info()[0])
+        print()
+        print("Trouble parsing subtitles in '{0}'".format(file))
         return False
 
     new_subtitle_file = []
@@ -170,9 +154,10 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                 new_subtitle_file.append(new_subtitle)
                 if new_subtitle.content != original_subtitle_text:
                     modified_line_count += 1
-                    if dry_run or verbose:
+                    if verbose:
                         if not quiet:
-                            print("\n{0}".format(wrap_sub(original_subtitle_text, "-")))
+                            print()
+                            print("{0}".format(wrap_sub(original_subtitle_text, "-")))
                             print("{0}".format(wrap_sub(new_subtitle.content, "+")))
                             print(
                                 "|By rule(s): {0}".format(
@@ -181,9 +166,10 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                             )
         else:
             removed_line_count += 1
-            if dry_run or verbose:
+            if verbose:
                 if not quiet:
-                    print("\n{0}".format(wrap_sub(original_subtitle_text, "-")))
+                    print()
+                    print("{0}".format(wrap_sub(original_subtitle_text, "-")))
                     print("|By rule: {0}".format(line_history[-1]))
 
     if not dry_run:
@@ -199,24 +185,80 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                     "Only changes to sorting and indexing found; No changes to subtitles detected."
                 )
             if not quiet or verbose:
-                print("Saving subtitle file {0}...\n".format(file))
+                print("Saving subtitle file {0}...".format(file))
+                print()
             with open(file, "w", encoding="utf-8") as filehandler:
                 filehandler.write(srt.compose(new_subtitle_file))
         else:
             if not quiet or verbose:
-                print("No changes to save\n")
+                print("No changes to save")
+                print()
 
     if summary or verbose:
         if dry_run:
-            print()  # A blank line
-        print(
+            if verbose:
+                print()
+            print(
+                "Summary: {0} Lines to be modified; {1} Lines to be removed; '{2}'".format(
+                    modified_line_count, removed_line_count, file
+                )
+            )
+        else:
+            print(
             "Summary: {0} Lines modified; {1} Lines removed; '{2}'".format(
                 modified_line_count, removed_line_count, file
             )
         )
-        print()  # Yes, another one
+        print()
 
     return True
+
+
+def parse_args():
+    argsparser = argparse.ArgumentParser(
+        description="Automatically apply a set of rules to subtitle(srt) files"
+    )
+    argsparser.add_argument("srt", nargs='*', help="One or more subtitle files or directories to operate on")
+    argsparser.add_argument(
+        "--apply-changes",
+        "-a",
+        action="store_false",
+        dest="dry_run",
+        help="The default is to do a dry-run. You must specify this option to apply the changes!",
+    )
+    argsparser.add_argument(
+        "--config",
+        "-c",
+        default="settings.yaml",
+        help="Specify the path to the settings configuration file (defaults to settings.yaml)",
+    )
+    argsparser.add_argument(
+        "--summary",
+        "-s",
+        action="store_true",
+        help="Provide a summary of the changes",
+    )
+    argsparser.add_argument(
+        "--show-rules",
+        "-r",
+        action="store_true",
+        help="Show all the rules and their source file",
+    )
+    v_q_group = argsparser.add_mutually_exclusive_group()
+    v_q_group.add_argument(
+        "--quiet",
+        "-q",
+        action="store_true",
+        help="Quiet output. Only errors will be printed on screen",
+    )
+    v_q_group.add_argument(
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="Verbose output. Lines that have been modified will be printed on screen",
+    )
+
+    return argsparser.parse_args()
 
 
 def validate_rules(rules):
@@ -268,7 +310,8 @@ def compile_regex(regex):
 
 
 def rule_error(rule_name, rule_file, message):
-    print("\nError in rule: '{0}' From: '{1}'".format(rule_name, rule_file))
+    print()
+    print("Error in rule: '{0}' From: '{1}'".format(rule_name, rule_file))
     print(message)
 
 

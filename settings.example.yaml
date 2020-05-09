@@ -1,4 +1,7 @@
 ---
+rules_directory: ./rules.d
+
+rules:
 # Example string replacement rule
 #- type: string
 #  pattern: www.google.com
@@ -11,15 +14,46 @@
   action: replace
   value: ""
 
-#- name: Remove sync and corrected by...
-#  type: regex
-#  pattern: '(?i)sync(ed)?,?( and| &)?( corrected)?( by| -->) (\w+)?'
-#  action: delete
+- name: Remove ASS formatting
+  type: regex
+  pattern: '{\\[a-zA-Z0-9\\\-&.,()]+}'
+  action: replace
+  value: ""
 
-#- name: Remove some well-known subtitle websites
-#  type: regex
-#  pattern: '(?i)(www\.)?(addic7ed.com|tvsubtitles.net)'
-#  action: delete
+- name: Remove WEBVTT STYLE lines
+  type: regex
+  pattern: 'WEBVTT\nSTYLE\n:: cue'
+  action: replace
+  value: ""
+
+- name: Remove captioned by ...
+  type: regex
+  pattern: '(?i)^Caption(s|ed) by'
+  action: delete
+
+- name: Remove &gt;
+  type: regex
+  pattern: '(?i)&gt;'
+  action: replace
+  value: ""
+
+- name: Remove &Amp
+  type: regex
+  pattern: '(?i)&Amp(?!;)'
+  action: replace
+  value: ""
+
+- name: Replace &amp;
+  type: regex
+  pattern: '(?i)&amp;'
+  action: replace
+  value: "&"
+
+- name: "Remove 'a(tm)a'"
+  type: regex
+  pattern: 'a\(tm\)a'
+  action: replace
+  value: ""
 
 - name: Remove double (or more) asterisk
   type: regex
@@ -29,15 +63,21 @@
 
 - name: Remove ellipses at start of a line
   type: regex
-  pattern: '^[.]+'
+  pattern: '^([-]?)[.]+'
   action: replace
-  value: ""
+  value: '\1'
 
 - name: Fix hyphens
   type: regex
   pattern: '[-]{3,}'
   action: replace
   value: '--'
+
+- name: Remove lines with only music symbols
+  type: regex
+  pattern: '^♪+$'
+  action: replace
+  value: ""
 
 - name: Remove lines with only an underscore
   type: regex

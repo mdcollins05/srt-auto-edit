@@ -29,7 +29,7 @@
 read -r -a script_args <<< "$NZBPO_SCRIPT_ARGS"
 
 echo "Running post-process srt-auto-edit on files..."
-"${NZBPO_SRTAUTOEDIT_PATH}/srtautoedit.py" -c "${NZBPO_SETTINGSYAML_PATH}" "${script_args[@]}" "${NZBPP_DIRECTORY}"
+"${NZBPO_SRTAUTOEDIT_PATH}/srtautoedit.py" -a -c "${NZBPO_SETTINGSYAML_PATH}" "${script_args[@]}" "${NZBPP_DIRECTORY}"
 
 # Exit good no matter what
 exit 93

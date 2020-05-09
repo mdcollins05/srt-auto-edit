@@ -44,7 +44,7 @@ read -r -a script_args <<< "$NZBPO_SCRIPT_ARGS"
 read -r -a scan_directories <<< "$NZBPO_SCAN_DIRECTORIES"
 
 echo "Running scheduled srt-auto-edit on files..."
-find "${scan_directories[@]}" -name \*.srt -cmin "-${NZBPO_MAX_AGE}" -exec "${NZBPO_SRTAUTOEDIT_PATH}/srtautoedit.py" -c "${NZBPO_SETTINGSYAML_PATH}" "${script_args[@]}" "{}" \;
+find "${scan_directories[@]}" -name \*.srt -cmin "-${NZBPO_MAX_AGE}" -exec "${NZBPO_SRTAUTOEDIT_PATH}/srtautoedit.py" -a -c "${NZBPO_SETTINGSYAML_PATH}" "${script_args[@]}" "{}" \;
 
 # Exit good no matter what
 exit 93

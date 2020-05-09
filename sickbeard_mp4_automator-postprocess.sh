@@ -12,6 +12,6 @@ files=$(echo "${MH_FILES%%,*}" | sed 's/[]"[]//g')
 for file in "${files%%.*}"* ; do
   if [[ $file == *srt ]];
   then
-    ${SCRIPT_PATH}/srtautoedit.py -c "${CONFIG_PATH}" -q -s "${file}"
+    ${SCRIPT_PATH}/srtautoedit.py -c "${CONFIG_PATH}" -a -q -s "${file}"
   fi
 done
