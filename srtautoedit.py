@@ -133,28 +133,28 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
 
             line_before_rule_run = new_subtitle.content
 
-            if rule['type'] == "regex":
-                if rule['action'] == "replace":
+            if rule["type"] == "regex":
+                if rule["action"] == "replace":
                     new_subtitle.content = re.sub(
-                        rule['pattern'],
-                        rule['value'],
+                        rule["pattern"],
+                        rule["value"],
                         new_subtitle.content,
                         re.MULTILINE,
                     )
-                elif rule['action'] == "delete":
-                    if re.findall(rule['pattern'], new_subtitle.content, re.MULTILINE):
+                elif rule["action"] == "delete":
+                    if re.findall(rule["pattern"], new_subtitle.content, re.MULTILINE):
                         new_subtitle = None
-            elif rule['type'] == "string":
-                if rule['action'] == "replace":
-                    new_subtitle.content.replace(rule['pattern'], rule['value'])
-                elif rule['action'] == "delete":
-                    if new_subtitle.content.find(rule['pattern']) == -1:
+            elif rule["type"] == "string":
+                if rule["action"] == "replace":
+                    new_subtitle.content.replace(rule["pattern"], rule["value"])
+                elif rule["action"] == "delete":
+                    if new_subtitle.content.find(rule["pattern"]) == -1:
                         new_subtitle = None
 
             if new_subtitle is None:
-                line_history.append(rule['name'])
+                line_history.append(rule["name"])
             elif new_subtitle.content != line_before_rule_run:
-                line_history.append(rule['name'])
+                line_history.append(rule["name"])
 
         if new_subtitle is not None:
             if new_subtitle.content != "":
@@ -184,9 +184,11 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
             or removed_line_count != 0
             or new_subtitle_file != original_subtitles
         ):
-            print() # Yes, a blank line
-            if (modified_line_count == 0 and removed_line_count == 0):
-                print("Only changes to sorting and indexing found; No changes to subtitles detected.")
+            print()  # Yes, a blank line
+            if modified_line_count == 0 and removed_line_count == 0:
+                print(
+                    "Only changes to sorting and indexing found; No changes to subtitles detected."
+                )
             if not quiet or verbose:
                 print("Saving subtitle file {0}...\n".format(file))
             with open(file, "w", encoding="utf-8") as filehandler:
@@ -197,13 +199,13 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
 
     if summary or verbose:
         if dry_run:
-            print() # A blank line
+            print()  # A blank line
         print(
             "Summary: {0} Lines modified; {1} Lines removed; '{2}'".format(
                 modified_line_count, removed_line_count, file
             )
         )
-        print() # Yes, another one
+        print()  # Yes, another one
 
     return True
 
@@ -211,25 +213,30 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
 def validate_rules(settings):
     errors = False
     for rule in settings:
-        if rule['type'] == "regex":
-            if not compile_regex(rule['pattern']):
+        if rule["type"] == "regex":
+            if not compile_regex(rule["pattern"]):
                 errors = True
-                rule_error(rule['name'], "Regex isn't valid. Please verify it's correct. https://regex101.com/ is a good site.")
-        elif rule['type'] == "string":
-            if 'pattern' not in rule:
+                rule_error(
+                    rule["name"],
+                    "Regex isn't valid. Please verify it's correct. https://regex101.com/ is a good site.",
+                )
+        elif rule["type"] == "string":
+            if "pattern" not in rule:
                 errors = True
-                rule_error(rule['name'], "You must define the string to find as the pattern.")
+                rule_error(
+                    rule["name"], "You must define the string to find as the pattern."
+                )
         else:
             errors = True
-            rule_error(rule['name'], "Unknown rule type: {0}".format(rule['type']))
+            rule_error(rule["name"], "Unknown rule type: {0}".format(rule["type"]))
 
-        if rule['action'] == "replace":
-            if 'value' not in rule:
+        if rule["action"] == "replace":
+            if "value" not in rule:
                 errors = True
-                rule_error(rule['name'], "You must define the value to replace.")
-        elif rule['action'] != "delete":
+                rule_error(rule["name"], "You must define the value to replace.")
+        elif rule["action"] != "delete":
             errors = True
-            rule_error(rule['name'], "Unknown rule action: {0}".format(rule['action']))
+            rule_error(rule["name"], "Unknown rule action: {0}".format(rule["action"]))
 
     if errors:
         return False
