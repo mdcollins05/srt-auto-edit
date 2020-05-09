@@ -133,37 +133,28 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
 
             line_before_rule_run = new_subtitle.content
 
-            if rule["type"] == "regex":
-                if rule["action"] == "replace":
+            if rule['type'] == "regex":
+                if rule['action'] == "replace":
                     new_subtitle.content = re.sub(
-                        rule["pattern"],
-                        rule["value"],
+                        rule['pattern'],
+                        rule['value'],
                         new_subtitle.content,
                         re.MULTILINE,
                     )
-                elif rule["action"] == "delete":
-                    if re.findall(rule["pattern"], new_subtitle.content, re.MULTILINE):
+                elif rule['action'] == "delete":
+                    if re.findall(rule['pattern'], new_subtitle.content, re.MULTILINE):
                         new_subtitle = None
-                else:
-                    print("\nError in rule: {0}".format(rule["name"]))
-                    print("Unknown action: {0}".format(rule["action"]))
-            elif rule["type"] == "string":
-                if rule["action"] == "replace":
-                    new_subtitle.content.replace(rule["pattern"], rule["value"])
-                elif rule["action"] == "delete":
-                    if new_subtitle.content.find(rule["pattern"]) == -1:
+            elif rule['type'] == "string":
+                if rule['action'] == "replace":
+                    new_subtitle.content.replace(rule['pattern'], rule['value'])
+                elif rule['action'] == "delete":
+                    if new_subtitle.content.find(rule['pattern']) == -1:
                         new_subtitle = None
-                else:
-                    print("\nError in rule: {0}".format(rule["name"]))
-                    print("Unknown action: {0}".format(rule["action"]))
-            else:
-                print("\nError in rule: {0}".format(rule["name"]))
-                print("Unknown type: {0}".format(rule["type"]))
 
             if new_subtitle is None:
-                line_history.append(rule["name"])
+                line_history.append(rule['name'])
             elif new_subtitle.content != line_before_rule_run:
-                line_history.append(rule["name"])
+                line_history.append(rule['name'])
 
         if new_subtitle is not None:
             if new_subtitle.content != "":
@@ -218,17 +209,42 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
 
 
 def validate_rules(settings):
-    # TODO: Add more validation for all the expected fields and rule types
+    errors = false
     for rule in settings:
         if type == "regex":
-            compile_regex(rule["pattern"])
+            if not compile_regex(rule['pattern']):
+                errors = true
+                rule_error(rule['name'], "Regex isn't valid. Please verify it's correct. https://regex101.com/ is a good site.")
+        elif type == "string":
+            if pattern not in rule:
+                errors = true
+                rule_error(rule['name'], "You must define the string to find as the pattern.")
+        else:
+            errors = true
+            rule_error(rule['name'], "Unknown rule type: {0}".format(rule['type']))
+
+        if action == "replace":
+            if value not in rule:
+                errors = true
+                rule_error(rule['name'], "You must define the value to replace.")
+        elif action != "delete":
+            errors = true
+            rule_error(rule['name'], "Unknown rule action: {0}".format(rule['action']))
+
+    if errors:
+        return false
 
 
 def compile_regex(regex):
     try:
-        return re.compile(regex, re.IGNORECASE)
+        return re.compile(regex, re.MULTILINE)
     except re.error:
-        print("Error with regex: {0}".format(regex))
+        return false
+
+
+def rule_error(rule_name, message)
+    print("\nError in rule: {0}".format(rule_name))
+    print(message)
 
 
 def wrap_sub(content, prefix):
