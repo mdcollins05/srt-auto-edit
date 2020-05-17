@@ -82,7 +82,7 @@ def main():
 
 
 def parse_srt(settings, file, summary, dry_run, quiet, verbose):
-    if dry_run or verbose or summary:
+    if dry_run or verbose:
         print("Parsing '{0}'...".format(file))
 
     try:
