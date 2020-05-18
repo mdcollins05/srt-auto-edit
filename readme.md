@@ -6,7 +6,7 @@ Apply a set of rules to your subtitle (SRT) files. You can remove formatting, re
 
 1. Clone the repo
 2. Install dependencies (`pip3 install -r requirements.txt`)
-3. Optionally, install a post-process script by copying it to the appropriate folder and editing the file
+3. Optionally, install a post-process script by copying it to the appropriate folder and editing the file (except for nzbget scripts)
 4. Copy `settings.example.yaml` to `settings.yaml` and modify the rules
 
 ## Manual usage
