@@ -74,7 +74,7 @@ def main():
                             args.verbose,
                         )
         else:
-            print("Subtitle file/path '{0}' doesn't exist".format(args.srt))
+            print("Subtitle file/path '{0}' doesn't exist".format(srt))
 
     if not args.show_rules and len(args.srt) == 0:
         print()
