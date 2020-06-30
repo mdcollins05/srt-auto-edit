@@ -155,18 +155,18 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
         if new_subtitle is not None:
             if new_subtitle.content != "":
                 new_subtitle_file.append(new_subtitle)
-                if new_subtitle.content != original_subtitle_text:
-                    modified_line_count += 1
-                    if verbose:
-                        if not quiet:
-                            print()
-                            print("{0}".format(wrap_sub(original_subtitle_text, "-")))
-                            print("{0}".format(wrap_sub(new_subtitle.content, "+")))
-                            print(
-                                "|By rule(s): {0}".format(
-                                    ", ".join(map(str, line_history))
-                                )
+            if new_subtitle.content != original_subtitle_text:
+                modified_line_count += 1
+                if verbose:
+                    if not quiet:
+                        print()
+                        print("{0}".format(wrap_sub(original_subtitle_text, "-")))
+                        print("{0}".format(wrap_sub(new_subtitle.content, "+")))
+                        print(
+                            "|By rule(s): {0}".format(
+                                ", ".join(map(str, line_history))
                             )
+                        )
         else:
             removed_line_count += 1
             if verbose:
@@ -182,7 +182,7 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
             or removed_line_count != 0
             or new_subtitle_file != original_subtitles
         ):
-            print()  # Yes, a blank line
+            print()
             if modified_line_count == 0 and removed_line_count == 0 and not quiet:
                 print(
                     "Only changes to sorting and indexing found; No changes to subtitles detected."

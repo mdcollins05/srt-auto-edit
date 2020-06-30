@@ -6,12 +6,11 @@ set -euo pipefail
 SCRIPT_PATH="/home/matt/srt-auto-edit" #EDIT ME!
 CONFIG_PATH="/home/matt/srt-auto-edit/settings.yaml" #EDIT ME!
 
-# shellcheck disable=SC2001
-files=$(echo "${MH_FILES%%,*}" | sed 's/[]"[]//g')
+files="${SMA_FILES:=${MH_FILES:=[]}}" # Support old and new env variable from Sickbeard MP4 Automator
 
-for file in "${files%%.*}"* ; do
-  if [[ $file == *srt ]];
-  then
+echo "${files}" | jq -c '.[]' | while read -r file; do
+  file=$(sed -e 's/"//g' <<<"${file}")
+  if [[ $file == *srt ]]; then
     ${SCRIPT_PATH}/srtautoedit.py -c "${CONFIG_PATH}" -a -q -s "${file}"
   fi
 done
