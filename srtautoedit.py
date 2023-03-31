@@ -163,9 +163,7 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                         print("{0}".format(wrap_sub(original_subtitle_text, "-")))
                         print("{0}".format(wrap_sub(new_subtitle.content, "+")))
                         print(
-                            "|By rule(s): {0}".format(
-                                ", ".join(map(str, line_history))
-                            )
+                            "|By rule(s): {0}".format(", ".join(map(str, line_history)))
                         )
         else:
             removed_line_count += 1
