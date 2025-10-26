@@ -114,7 +114,7 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
             start=original_subtitles[i].start,
             end=original_subtitles[i].end,
             content=original_subtitles[i].content,
-            proprietary=original_subtitles[1].proprietary,
+            proprietary=original_subtitles[i].proprietary,
         )
 
         line_history = []
@@ -135,16 +135,16 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                         rule["pattern"],
                         rule["value"],
                         new_subtitle.content,
-                        re.MULTILINE,
+                        flags=re.MULTILINE,
                     )
                 elif rule["action"] == "delete":
                     if re.findall(rule["pattern"], new_subtitle.content, re.MULTILINE):
                         new_subtitle = None
             elif rule["type"] == "string":
                 if rule["action"] == "replace":
-                    new_subtitle.content.replace(rule["pattern"], rule["value"])
+                    new_subtitle.content = new_subtitle.content.replace(rule["pattern"], rule["value"])
                 elif rule["action"] == "delete":
-                    if new_subtitle.content.find(rule["pattern"]) == -1:
+                    if new_subtitle.content.find(rule["pattern"]) != -1:
                         new_subtitle = None
 
             if new_subtitle is None:
@@ -190,6 +190,11 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                 print()
             with open(file, "w", encoding="utf-8") as filehandler:
                 filehandler.write(srt.compose(new_subtitle_file))
+        elif len(new_subtitle_file) == 0:
+            if not quiet or verbose:
+                print("Deleting empty subtitle file {0}...".format(file))
+                print()
+            os.remove(file)
         else:
             if not quiet or verbose:
                 print("No changes to save")
@@ -265,6 +270,13 @@ def validate_rules(rules):
     errors = False
     for rule in rules:
         if rule["type"] == "regex":
+            if "pattern" not in rule:
+                errors = True
+                rule_error(
+                    rule["name"],
+                    rule["from_file"],
+                    "You must define the regex to find as the pattern.",
+                )
             if not compile_regex(rule["pattern"]):
                 errors = True
                 rule_error(
