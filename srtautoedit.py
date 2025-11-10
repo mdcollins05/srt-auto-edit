@@ -142,7 +142,9 @@ def parse_srt(settings, file, summary, dry_run, quiet, verbose):
                         new_subtitle = None
             elif rule["type"] == "string":
                 if rule["action"] == "replace":
-                    new_subtitle.content = new_subtitle.content.replace(rule["pattern"], rule["value"])
+                    new_subtitle.content = new_subtitle.content.replace(
+                        rule["pattern"], rule["value"]
+                    )
                 elif rule["action"] == "delete":
                     if new_subtitle.content.find(rule["pattern"]) != -1:
                         new_subtitle = None
