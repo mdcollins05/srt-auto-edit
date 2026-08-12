@@ -1,0 +1,19 @@
+srt-auto-edit — DRY RUN, no files will be written (pass -a to apply)  |  config: /test-data/settings-rules-dir.yaml  |  3 rules loaded
+Parsing '/test-data/edge/rules-dir-target.srt'...
+
+/test-data/edge/rules-dir-target.srt:1  00:00:01,000 --> 00:00:02,000  [modified]
+-  {\an8}<i>Positioned and italic.</i>
++  Positioned and italic.
+| rules: Remove formatting, Remove ASS position tags
+
+/test-data/edge/rules-dir-target.srt:2  00:00:03,000 --> 00:00:04,000  [modified]
+-  <pos x="1">Tagged.</pos>
++  Tagged.
+| rules: Remove screen-reader position tags
+Summary: 2 Lines to be modified; 0 Lines to be removed; '/test-data/edge/rules-dir-target.srt'
+
+=== Rules fired (cues affected) ===
+      1  Remove ASS position tags [from /test-data/rules.d/10-shared.yml]
+      1  Remove formatting
+      1  Remove screen-reader position tags [from /test-data/rules.d/20-extra.yaml]
+TOTAL: mode=dry-run files_scanned=1 files_changed=1 cues_modified=2 cues_removed=0 files_deleted=0 files_failed=0 rules_fired=3

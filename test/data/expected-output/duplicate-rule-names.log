@@ -1,0 +1,8 @@
+
+Error in rule: 'Remove formatting' From: '/test-data/duplicate-settings.yaml'
+A rule named 'Remove formatting' is already defined in '/test-data/duplicate-settings.yaml'. Rule names must be unique.
+
+Error in rule: 'Remove screen-reader position tags' From: '/test-data/rules.d/20-extra.yaml'
+A rule named 'Remove screen-reader position tags' is already defined in '/test-data/duplicate-settings.yaml'. Rule names must be unique.
+
+Configuration has errors; no subtitle files were processed.

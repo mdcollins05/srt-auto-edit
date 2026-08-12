@@ -1,0 +1,6 @@
+# Second file loaded from rules_directory (.yaml extension).
+- name: Remove screen-reader position tags
+  type: regex
+  pattern: '(?i)</?pos[^>]*>'
+  action: replace
+  value: ""

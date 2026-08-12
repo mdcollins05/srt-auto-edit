@@ -1,0 +1,29 @@
+
+Error in rule: 'Regex rule with no pattern' From: '/test-data/invalid-settings.yaml'
+You must define the regex to find as the pattern.
+
+Error in rule: 'Regex rule with invalid pattern' From: '/test-data/invalid-settings.yaml'
+Regex isn't valid. Please verify it's correct. https://regex101.com/ is a good site.
+
+Error in rule: 'String rule with no pattern' From: '/test-data/invalid-settings.yaml'
+You must define the string to find as the pattern.
+
+Error in rule: 'Rule with unknown type' From: '/test-data/invalid-settings.yaml'
+Unknown rule type: fuzzy
+
+Error in rule: 'Rule with no type' From: '/test-data/invalid-settings.yaml'
+You must define the rule type. 'regex' and 'string' are supported.
+
+Error in rule: 'Replace rule with no value' From: '/test-data/invalid-settings.yaml'
+You must define the value to replace.
+
+Error in rule: 'Rule with unknown action' From: '/test-data/invalid-settings.yaml'
+Unknown rule action: mangle
+
+Error in rule: 'Rule with no action' From: '/test-data/invalid-settings.yaml'
+You must define the rule action. 'replace' and 'delete' are supported.
+
+Error in rule: '<unnamed rule>' From: '/test-data/invalid-settings.yaml'
+You must give the rule a name.
+
+Configuration has errors; no subtitle files were processed.

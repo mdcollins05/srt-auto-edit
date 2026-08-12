@@ -1,0 +1,36 @@
+srt-auto-edit — DRY RUN, no files will be written (pass -a to apply)  |  config: /config/settings.yaml  |  11 rules loaded
+Parsing '/test-data/input/ads-and-credits.srt'...
+
+/test-data/input/ads-and-credits.srt:1  00:00:01,000 --> 00:00:02,000  [removed]
+-  Subtitles by subhub.example
+| rules: Remove subtitle website credits
+
+/test-data/input/ads-and-credits.srt:2  00:00:03,000 --> 00:00:05,000  [modified]
+-  <i>Hello,world.</i>
++  Hello, world.
+| rules: Remove formatting, Fix missing space after comma
+
+/test-data/input/ads-and-credits.srt:3  00:00:06,000 --> 00:00:08,000  [removed]
+-  www.opensubs.example
+| rules: Remove subtitle website credits
+
+/test-data/input/ads-and-credits.srt:4  00:00:09,000 --> 00:00:10,000  [removed]
+-  RLSGRP
+| rules: Remove release group watermark
+
+/test-data/input/ads-and-credits.srt:5  00:00:11,000 --> 00:00:13,000  [modified]
+-  <b>Exampl Show</b>
++  Example Show
+| rules: Remove formatting, Fix show title typo in ads-and-credits
+Summary: 2 Lines to be modified; 3 Lines to be removed; '/test-data/input/ads-and-credits.srt'
+
+=== Rules fired (cues affected) ===
+      2  Remove formatting
+      2  Remove subtitle website credits
+      1  Fix missing space after comma
+      1  Fix show title typo in ads-and-credits
+      1  Remove release group watermark
+=== Rules loaded but never fired (6) ===
+     Remove sound tags on their own line, Remove lines with only music symbols, Remove extra spaces,
+     Remove spaces at beginning of line, Remove spaces at end of line, Fix OCR lowercase L for I
+TOTAL: mode=dry-run files_scanned=1 files_changed=1 cues_modified=2 cues_removed=3 files_deleted=0 files_failed=0 rules_fired=5

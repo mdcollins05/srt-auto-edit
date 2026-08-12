@@ -1,0 +1,13 @@
+srt-auto-edit — DRY RUN, no files will be written (pass -a to apply)  |  config: /config/settings.yaml  |  11 rules loaded
+Below rules are from file: /config/settings.yaml
+Rule name: Remove formatting
+Rule name: Remove sound tags on their own line
+Rule name: Remove lines with only music symbols
+Rule name: Fix missing space after comma
+Rule name: Remove subtitle website credits
+Rule name: Remove extra spaces
+Rule name: Remove spaces at beginning of line
+Rule name: Remove spaces at end of line
+Rule name: Fix OCR lowercase L for I
+Rule name: Remove release group watermark
+Rule name: Fix show title typo in ads-and-credits

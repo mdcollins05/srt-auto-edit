@@ -1,0 +1,12 @@
+srt-auto-edit — DRY RUN, no files will be written (pass -a to apply)  |  config: /config/settings.yaml  |  11 rules loaded
+Parsing '/test-data/input/clean.srt'...
+Summary: 0 Lines to be modified; 0 Lines to be removed; '/test-data/input/clean.srt'
+
+=== Rules fired (cues affected) ===
+     (none)
+=== Rules loaded but never fired (11) ===
+     Remove formatting, Remove sound tags on their own line, Remove lines with only music symbols,
+     Fix missing space after comma, Remove subtitle website credits, Remove extra spaces, Remove
+     spaces at beginning of line, Remove spaces at end of line, Fix OCR lowercase L for I, Remove
+     release group watermark, Fix show title typo in ads-and-credits
+TOTAL: mode=dry-run files_scanned=1 files_changed=0 cues_modified=0 cues_removed=0 files_deleted=0 files_failed=0 rules_fired=0

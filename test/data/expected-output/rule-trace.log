@@ -1,0 +1,71 @@
+srt-auto-edit — DRY RUN, no files will be written (pass -a to apply)  |  config: /config/settings.yaml  |  11 rules loaded
+Parsing '/test-data/input/multiline.srt'...
+| skip 'Fix show title typo in ads-and-credits': only_if_match '*/ads-and-credits.srt' doesn't match this path
+| step 'Remove formatting':
+~  Jullie moeten met mij uitgaan.
+~  Ik heb jullie al zolang niet gezien.
+
+/test-data/input/multiline.srt:1  00:00:01,000 --> 00:00:03,000  [modified]
+-  <i>Jullie moeten met mij uitgaan.
+-  Ik heb jullie al zolang niet gezien.</i>
++  Jullie moeten met mij uitgaan.
++  Ik heb jullie al zolang niet gezien.
+| rules: Remove formatting
+| step 'Remove sound tags on their own line':
+
+~  Whoo! Jackie!
+| step 'Remove spaces at beginning of line':
+~  Whoo! Jackie!
+
+/test-data/input/multiline.srt:3  00:00:07,000 --> 00:00:09,000  [modified]
+-  [ Earl ]
+-  Whoo! Jackie!
++  Whoo! Jackie!
+| rules: Remove sound tags on their own line, Remove spaces at beginning of line
+| step 'Remove lines with only music symbols':
+
+~  ♪ Yeah ♪
+| step 'Remove spaces at beginning of line':
+~  ♪ Yeah ♪
+
+/test-data/input/multiline.srt:4  00:00:10,000 --> 00:00:12,000  [modified]
+-  ♪
+-  ♪ Yeah ♪
++  ♪ Yeah ♪
+| rules: Remove lines with only music symbols, Remove spaces at beginning of line
+| step 'Remove extra spaces':
+~  Line with trailing space and the next line.
+
+/test-data/input/multiline.srt:7  00:00:19,000 --> 00:00:21,000  [modified]
+-  Line with trailing space   
+-  and the next line.
++  Line with trailing space and the next line.
+| rules: Remove extra spaces
+| step 'Fix OCR lowercase L for I':
+~  I'm not sure about that.
+
+/test-data/input/multiline.srt:8  00:00:22,000 --> 00:00:24,000  [modified]
+-  l'm not sure about that.
++  I'm not sure about that.
+| rules: Fix OCR lowercase L for I
+| step 'Remove spaces at end of line':
+~  A single trailing space.
+
+/test-data/input/multiline.srt:9  00:00:25,000 --> 00:00:27,000  [modified]
+-  A single trailing space. 
++  A single trailing space.
+| rules: Remove spaces at end of line
+Summary: 6 Lines to be modified; 0 Lines to be removed; '/test-data/input/multiline.srt'
+
+=== Rules fired (cues affected) ===
+      2  Remove spaces at beginning of line
+      1  Fix OCR lowercase L for I
+      1  Remove extra spaces
+      1  Remove formatting
+      1  Remove lines with only music symbols
+      1  Remove sound tags on their own line
+      1  Remove spaces at end of line
+=== Rules loaded but never fired (4) ===
+     Fix missing space after comma, Remove subtitle website credits, Remove release group watermark,
+     Fix show title typo in ads-and-credits
+TOTAL: mode=dry-run files_scanned=1 files_changed=1 cues_modified=6 cues_removed=0 files_deleted=0 files_failed=0 rules_fired=7

@@ -1,0 +1,1 @@
+Not a subtitle file. The directory walk must ignore this.

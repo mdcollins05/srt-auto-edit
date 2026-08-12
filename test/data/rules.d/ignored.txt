@@ -1,0 +1,1 @@
+Not a YAML file. The rules_directory loader must ignore this.

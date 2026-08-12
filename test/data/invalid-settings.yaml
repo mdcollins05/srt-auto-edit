@@ -1,0 +1,55 @@
+# Deliberately broken config, used by run-tests.sh to check that every rule
+# error is reported and that the run then stops with exit code 1 rather than
+# processing files with rules it already knows are unusable.
+
+rules:
+# --- Missing pattern: must be reported, and must not then be compiled ---
+- name: Regex rule with no pattern
+  type: regex
+  action: replace
+  value: ""
+
+# --- Unclosed character class ---
+- name: Regex rule with invalid pattern
+  type: regex
+  pattern: '([unclosed'
+  action: replace
+  value: ""
+
+# --- String rule missing its pattern ---
+- name: String rule with no pattern
+  type: string
+  action: delete
+
+# --- Unknown type ---
+- name: Rule with unknown type
+  type: fuzzy
+  pattern: "x"
+  action: delete
+
+# --- Missing type entirely ---
+- name: Rule with no type
+  pattern: "x"
+  action: delete
+
+# --- Replace action with no value to replace with ---
+- name: Replace rule with no value
+  type: string
+  pattern: "x"
+  action: replace
+
+# --- Unknown action ---
+- name: Rule with unknown action
+  type: string
+  pattern: "x"
+  action: mangle
+
+# --- Missing action entirely ---
+- name: Rule with no action
+  type: string
+  pattern: "x"
+
+# --- Missing name ---
+- type: string
+  pattern: "x"
+  action: delete

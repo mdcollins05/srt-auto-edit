@@ -1,0 +1,42 @@
+1
+00:00:01,000 --> 00:00:03,000
+<i>Jullie moeten met mij uitgaan.
+Ik heb jullie al zolang niet gezien.</i>
+
+2
+00:00:04,000 --> 00:00:06,000
+- You have your orders.
+- They make no sense.
+
+3
+00:00:07,000 --> 00:00:09,000
+[ Earl ]
+Whoo! Jackie!
+
+4
+00:00:10,000 --> 00:00:12,000
+♪
+♪ Yeah ♪
+
+5
+00:00:13,000 --> 00:00:15,000
+We will serve the traditional
+Thanksgiving entrée of...
+
+6
+00:00:16,000 --> 00:00:18,000
+<Font
+color="#4096d1">Science rules.</Font>
+
+7
+00:00:19,000 --> 00:00:21,000
+Line with trailing space   
+and the next line.
+
+8
+00:00:22,000 --> 00:00:24,000
+l'm not sure about that.
+
+9
+00:00:25,000 --> 00:00:27,000
+A single trailing space. 
