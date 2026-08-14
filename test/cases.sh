@@ -19,6 +19,7 @@ EDGE_DIR=/test-data/edge
 output_cases() {
     cat <<EOF
 ads-and-credits|0|-vv|-c|$CONFIG|$INPUT_DIR/ads-and-credits.srt
+default-verbosity|0|-c|$CONFIG|$INPUT_DIR/ads-and-credits.srt
 clean|0|-vv|-c|$CONFIG|$INPUT_DIR/clean.srt
 malformed|0|-vv|-c|$CONFIG|$INPUT_DIR/malformed.srt
 multiline|0|-vv|-c|$CONFIG|$INPUT_DIR/multiline.srt

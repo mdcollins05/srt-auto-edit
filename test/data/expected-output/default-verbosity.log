@@ -1,0 +1,12 @@
+srt-auto-edit — DRY RUN, no files will be written (pass -a to apply)  |  config: /config/settings.yaml  |  11 rules loaded
+Summary: 2 Lines to be modified; 3 Lines to be removed; '/test-data/input/ads-and-credits.srt'
+
+=== Rules fired (cues affected) ===
+      2  Remove formatting
+      2  Remove subtitle website credits
+      1  Fix missing space after comma
+      1  Fix show title typo in ads-and-credits
+      1  Remove release group watermark
+=== Rules loaded but never fired (6) ===
+     (run with -v to list them)
+TOTAL: mode=dry-run files_scanned=1 files_changed=1 cues_modified=2 cues_removed=3 files_deleted=0 files_failed=0 rules_fired=5

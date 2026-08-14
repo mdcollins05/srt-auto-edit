@@ -128,7 +128,7 @@ def main():
             totals["files_failed"] += 1
 
     if verbosity >= V_NORMAL:
-        print_rule_rollup(settingsYaml["rules"], rule_counts, args.config)
+        print_rule_rollup(settingsYaml["rules"], rule_counts, args.config, verbosity)
 
     print_totals(totals, rule_counts, args.dry_run)
 
@@ -372,7 +372,7 @@ def print_change(file, cue_index, subtitle, before, after, rules, kind):
     print("| rules: {0}".format(", ".join(map(str, rules))))
 
 
-def print_rule_rollup(rules, rule_counts, config):
+def print_rule_rollup(rules, rule_counts, config, verbosity):
     # Rule names are unique (validate_rules enforces it), so the name alone
     # identifies a rule. Only rules loaded from outside the main config file
     # are qualified with where they came from.
@@ -401,14 +401,20 @@ def print_rule_rollup(rules, rule_counts, config):
 
     if never_fired:
         print("=== Rules loaded but never fired ({0}) ===".format(len(never_fired)))
-        print(
-            textwrap.fill(
-                ", ".join(never_fired),
-                width=100,
-                initial_indent="     ",
-                subsequent_indent="     ",
+        # The list is as long as the config, not as long as the run, so a
+        # single-file run against a large config would bury its own output in
+        # rule names. The count is the signal; the names are the detail.
+        if verbosity >= V_CHANGES:
+            print(
+                textwrap.fill(
+                    ", ".join(never_fired),
+                    width=100,
+                    initial_indent="     ",
+                    subsequent_indent="     ",
+                )
             )
-        )
+        else:
+            print("     (run with -v to list them)")
 
 
 def print_totals(totals, rule_counts, dry_run):

@@ -61,7 +61,7 @@ Files that nothing matched print nothing at all, so the length of a run's output
 | ----- | ----- | ------------ |
 | | `-q` | Errors and the final `TOTAL:` line only |
 | | *(none)* | Banner, a `Summary:` line per **changed** file, the rule rollup |
-| 1 | `-v` | `-`/`+` change blocks |
+| 1 | `-v` | `-`/`+` change blocks, and the names of the rules that never fired |
 | 2 | `-vv` | A trace of every file scanned, including unchanged ones |
 | 3 | `-vvv` | Per-rule detail: rules skipped by `only_if_match`, and each rule's intermediate result within a cue |
 
@@ -86,13 +86,20 @@ Useful greps: `^\| rules:` for attribution, `\.srt:[0-9]+ ` for change headers.
 
 ### Rule rollup
 
-Every run ends with a count of how many cues each rule affected, largest first. This is the quickest way to spot a new rule that is far more aggressive than intended. Rules that were loaded but never matched anything are listed after it, which catches dead or misspelled rules.
+Every run ends with a count of how many cues each rule affected, largest first. This is the quickest way to spot a new rule that is far more aggressive than intended. Counts are per rule, so a cue that several rules touched is counted by each of them; they will total more than the cue counts in `TOTAL:`. Rules that were loaded but never matched anything are counted after it, which catches dead or misspelled rules.
 
 ```
 === Rules fired (cues affected) ===
     512  strip-hash-prefix
      88  ad-removal [from ./rules.d/10-ads.yml]
      12  fix-ellipsis
+=== Rules loaded but never fired (3) ===
+     (run with -v to list them)
+```
+
+Naming the rules that never fired takes as many lines as you have rules, so the names are held back to `-v`; a run over a single file would otherwise print its whole config back at you. The rollup is the second-to-last thing printed, so `-v` over a big library and `| tail -40` gets the list without the change blocks.
+
+```
 === Rules loaded but never fired (3) ===
      hi-speaker-tags, srt-color-strip, dvd-artifact [from ./rules.d/20-dvd.yml]
 ```
