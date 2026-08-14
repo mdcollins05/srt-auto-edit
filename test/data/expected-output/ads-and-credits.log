@@ -31,6 +31,5 @@ Summary: 2 Lines to be modified; 3 Lines to be removed; '/test-data/input/ads-an
       1  Fix show title typo in ads-and-credits
       1  Remove release group watermark
 === Rules loaded but never fired (6) ===
-     Remove sound tags on their own line, Remove lines with only music symbols, Remove extra spaces,
-     Remove spaces at beginning of line, Remove spaces at end of line, Fix OCR lowercase L for I
+     (run with -r to list them)
 TOTAL: mode=dry-run files_scanned=1 files_changed=1 cues_modified=2 cues_removed=3 files_deleted=0 files_failed=0 rules_fired=5

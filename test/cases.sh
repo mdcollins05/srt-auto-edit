@@ -28,6 +28,7 @@ rule-trace|0|-vvv|-c|$CONFIG|$INPUT_DIR/multiline.srt
 only-rule|0|-v|-c|$CONFIG|--only-rule|Remove formatting|$INPUT_DIR
 skip-rule|0|-v|-c|$CONFIG|--skip-rule|Remove formatting|--skip-rule|Remove extra spaces|$INPUT_DIR
 show-rules|0|-r|-c|$CONFIG
+show-rules-rollup|0|-r|-c|$CONFIG|$INPUT_DIR/ads-and-credits.srt
 rules-directory|0|-vv|-c|$RULES_DIR_CONFIG|$EDGE_DIR/rules-dir-target.srt
 broken|0|-vv|-c|$CONFIG|$EDGE_DIR/broken.srt
 unknown-rule|1|-c|$CONFIG|--only-rule|No Such Rule|$INPUT_DIR

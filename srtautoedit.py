@@ -128,7 +128,9 @@ def main():
             totals["files_failed"] += 1
 
     if verbosity >= V_NORMAL:
-        print_rule_rollup(settingsYaml["rules"], rule_counts, args.config, verbosity)
+        print_rule_rollup(
+            settingsYaml["rules"], rule_counts, args.config, args.show_rules
+        )
 
     print_totals(totals, rule_counts, args.dry_run)
 
@@ -372,7 +374,7 @@ def print_change(file, cue_index, subtitle, before, after, rules, kind):
     print("| rules: {0}".format(", ".join(map(str, rules))))
 
 
-def print_rule_rollup(rules, rule_counts, config, verbosity):
+def print_rule_rollup(rules, rule_counts, config, show_rules):
     # Rule names are unique (validate_rules enforces it), so the name alone
     # identifies a rule. Only rules loaded from outside the main config file
     # are qualified with where they came from.
@@ -404,7 +406,11 @@ def print_rule_rollup(rules, rule_counts, config, verbosity):
         # The list is as long as the config, not as long as the run, so a
         # single-file run against a large config would bury its own output in
         # rule names. The count is the signal; the names are the detail.
-        if verbosity >= V_CHANGES:
+        #
+        # Gated on --show-rules rather than on verbosity, because it answers a
+        # question about the rules, not about the files: -v and -vvv are used
+        # routinely to look at changes, and shouldn't drag the config along.
+        if show_rules:
             print(
                 textwrap.fill(
                     ", ".join(never_fired),
@@ -414,7 +420,7 @@ def print_rule_rollup(rules, rule_counts, config, verbosity):
                 )
             )
         else:
-            print("     (run with -v to list them)")
+            print("     (run with -r to list them)")
 
 
 def print_totals(totals, rule_counts, dry_run):
@@ -484,7 +490,7 @@ def parse_args():
         "--show-rules",
         "-r",
         action="store_true",
-        help="Show all the rules and their source file",
+        help="Show all the rules and their source file, and name the rules that never fired in the rollup",
     )
     argsparser.add_argument(
         "--only-rule",

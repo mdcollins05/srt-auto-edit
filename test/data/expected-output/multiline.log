@@ -46,6 +46,5 @@ Summary: 6 Lines to be modified; 0 Lines to be removed; '/test-data/input/multil
       1  Remove sound tags on their own line
       1  Remove spaces at end of line
 === Rules loaded but never fired (4) ===
-     Fix missing space after comma, Remove subtitle website credits, Remove release group watermark,
-     Fix show title typo in ads-and-credits
+     (run with -r to list them)
 TOTAL: mode=dry-run files_scanned=1 files_changed=1 cues_modified=6 cues_removed=0 files_deleted=0 files_failed=0 rules_fired=7

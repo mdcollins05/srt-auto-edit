@@ -35,7 +35,8 @@ options:
                         (defaults to settings.yaml)
   --summary, -s         Deprecated and ignored; per-file summaries for changed
                         files are now printed by default
-  --show-rules, -r      Show all the rules and their source file
+  --show-rules, -r      Show all the rules and their source file, and name the
+                        rules that never fired in the rollup
   --only-rule NAME      Only apply the rule with this name. Repeatable. Errors
                         if no rule matches
   --skip-rule NAME      Apply every rule except the one with this name.
@@ -61,7 +62,7 @@ Files that nothing matched print nothing at all, so the length of a run's output
 | ----- | ----- | ------------ |
 | | `-q` | Errors and the final `TOTAL:` line only |
 | | *(none)* | Banner, a `Summary:` line per **changed** file, the rule rollup |
-| 1 | `-v` | `-`/`+` change blocks, and the names of the rules that never fired |
+| 1 | `-v` | `-`/`+` change blocks |
 | 2 | `-vv` | A trace of every file scanned, including unchanged ones |
 | 3 | `-vvv` | Per-rule detail: rules skipped by `only_if_match`, and each rule's intermediate result within a cue |
 
@@ -94,10 +95,10 @@ Every run ends with a count of how many cues each rule affected, largest first. 
      88  ad-removal [from ./rules.d/10-ads.yml]
      12  fix-ellipsis
 === Rules loaded but never fired (3) ===
-     (run with -v to list them)
+     (run with -r to list them)
 ```
 
-Naming the rules that never fired takes as many lines as you have rules, so the names are held back to `-v`; a run over a single file would otherwise print its whole config back at you. The rollup is the second-to-last thing printed, so `-v` over a big library and `| tail -40` gets the list without the change blocks.
+Naming the rules that never fired takes as many lines as you have rules, so the names are held back to `--show-rules`; a run over a single file would otherwise print its whole config back at you. It's on `-r` rather than on a verbosity level because it's a question about your rules, not about the run — so it works over a whole library without also printing a change block per changed cue:
 
 ```
 === Rules loaded but never fired (3) ===
