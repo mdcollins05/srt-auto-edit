@@ -15,8 +15,8 @@ You can manually run `srtautoedit.py` from the command line.
 
 ```
 $ ./srtautoedit.py --help
-usage: srtautoedit.py [-h] [--apply-changes] [--config CONFIG] [--summary]
-                      [--show-rules] [--only-rule NAME] [--skip-rule NAME]
+usage: srtautoedit.py [-h] [--apply-changes] [--config CONFIG] [--show-rules]
+                      [--only-rule NAME] [--skip-rule NAME]
                       [--quiet | --verbose]
                       [srt ...]
 
@@ -33,8 +33,6 @@ options:
   --config CONFIG, -c CONFIG
                         Specify the path to the settings configuration file
                         (defaults to settings.yaml)
-  --summary, -s         Deprecated and ignored; per-file summaries for changed
-                        files are now printed by default
   --show-rules, -r      Show all the rules and their source file, and name the
                         rules that never fired in the rollup
   --only-rule NAME      Only apply the rule with this name. Repeatable. Errors

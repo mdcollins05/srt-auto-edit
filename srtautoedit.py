@@ -481,12 +481,6 @@ def parse_args():
         help="Specify the path to the settings configuration file (defaults to settings.yaml)",
     )
     argsparser.add_argument(
-        "--summary",
-        "-s",
-        action="store_true",
-        help="Deprecated and ignored; per-file summaries for changed files are now printed by default",
-    )
-    argsparser.add_argument(
         "--show-rules",
         "-r",
         action="store_true",
