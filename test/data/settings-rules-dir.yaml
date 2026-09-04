@@ -1,0 +1,12 @@
+# Config used only by the rules_directory test. Exercises loading extra rule
+# files from a directory, the .yml/.yaml extension filter, sorted load order,
+# and the rollup tagging rules that came from outside this file with
+# "[from <path>]".
+rules_directory: /test-data/rules.d
+
+rules:
+- name: Remove formatting
+  type: regex
+  pattern: '</?(font|b|i|u).*?>'
+  action: replace
+  value: ""

@@ -1,0 +1,31 @@
+services:
+  # Interactive dry-run against test input files.
+  # Examples:
+  #   docker compose run --rm srt-auto-edit -r -c /config/settings.yaml
+  #   docker compose run --rm srt-auto-edit -v -c /config/settings.yaml /test-data/
+  #   docker compose run --rm srt-auto-edit -v -c /config/settings.yaml /test-data/ads-and-credits.srt
+  srt-auto-edit:
+    build: .
+    volumes:
+      - ./test/data/input:/test-data:ro
+      - ./test/data/settings.yaml:/config/settings.yaml:ro
+
+  # Automated comparison: runs each input file through the tool and diffs
+  # against the expected outputs in test-data/expected/.
+  # Run: docker compose run --rm test
+  test:
+    build: .
+    entrypoint: ["/bin/bash", "/app/run-tests.sh"]
+    volumes:
+      - ./test/data:/test-data:ro
+      - ./test/data/settings.yaml:/config/settings.yaml:ro
+
+  # Generates/regenerates the expected output files from the current rules.
+  # Run after changing rules to update the baseline, then review and commit.
+  # Run: docker compose run --rm generate-expected
+  generate-expected:
+    build: .
+    entrypoint: ["/bin/bash", "/app/generate-expected.sh"]
+    volumes:
+      - ./test/data:/test-data
+      - ./test/data/settings.yaml:/config/settings.yaml:ro

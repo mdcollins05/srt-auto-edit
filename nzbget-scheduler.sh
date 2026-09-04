@@ -23,7 +23,7 @@
 
 # Script arguments
 #
-#SCRIPT_ARGS=-s -q
+#SCRIPT_ARGS=-q
 
 # Directories to scan
 #

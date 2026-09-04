@@ -1,0 +1,101 @@
+# Test configuration for srt-auto-edit.
+#
+# One rule per behaviour, no duplicates: every rule type and action, a capture
+# group in a replacement, only_if_match in both directions, and the
+# re.MULTILINE handling of anchored patterns.
+#
+# Rules run in order and see each other's output, so a rule can mask another by
+# consuming the text it was meant to match. run-tests.sh guards against that:
+# every rule here must change something when run on its own, and removing any
+# one of them must change the result.
+#
+# Every domain and release group below is invented. ".example" is reserved by
+# RFC 2606 and can never be a real site.
+
+rules:
+# --- Regex replace: strip HTML/formatting tags. Uses '.*?>' rather than
+#     '[^>]*>' so that a tag split across a newline is NOT matched:
+#     re.MULTILINE is not re.DOTALL. The pattern is also case-sensitive. ---
+- name: Remove formatting
+  type: regex
+  pattern: '</?(font|b|i|u).*?>'
+  action: replace
+  value: ""
+
+# --- Regex replace, anchored: under re.MULTILINE this strips only the line it
+#     matched, leaving the rest of the cue in place. ---
+- name: Remove sound tags on their own line
+  type: regex
+  pattern: '^\[[^\]]+\]$'
+  action: replace
+  value: ""
+
+# --- Regex replace down to an empty string: a cue emptied by a rule is
+#     dropped from the output, the same end result as a delete. ---
+- name: Remove lines with only music symbols
+  type: regex
+  pattern: '^♪+$'
+  action: replace
+  value: ""
+
+# --- Regex replace using a capture group in the replacement value ---
+- name: Fix missing space after comma
+  type: regex
+  pattern: ',([A-Za-z])'
+  action: replace
+  value: ', \1'
+
+# --- Regex delete: a match anywhere removes the whole cue ---
+- name: Remove subtitle website credits
+  type: regex
+  pattern: '(?i)(www\.)?(subhub|opensubs)\.example'
+  action: delete
+
+# --- Regex replace: collapses runs of whitespace. \s matches the newline, so
+#     a line ending in trailing space is joined to the line below it. ---
+- name: Remove extra spaces
+  type: regex
+  pattern: '[\s]{2,}'
+  action: replace
+  value: " "
+
+# --- Cleans up the leading newline left behind when an anchored rule empties
+#     the first line of a multi-line cue ---
+- name: Remove spaces at beginning of line
+  type: regex
+  pattern: '^\s+'
+  action: replace
+  value: ""
+
+# --- Runs after the whitespace-collapsing rule above, which would consume any
+#     trailing run that sits before a newline. Its fixture is therefore a
+#     single trailing space at the very end of a cue, which is too short for
+#     '[\s]{2,}' to match and so reaches this rule intact. ---
+- name: Remove spaces at end of line
+  type: regex
+  pattern: '\s+$'
+  action: replace
+  value: ""
+
+# --- String replace with no only_if_match, so it applies to every file.
+#     "l'm" for "I'm" is a common OCR artefact in real subtitles. ---
+- name: Fix OCR lowercase L for I
+  type: string
+  pattern: "l'm "
+  action: replace
+  value: "I'm "
+
+# --- String delete: exact-string match removes the whole cue ---
+- name: Remove release group watermark
+  type: string
+  pattern: "RLSGRP"
+  action: delete
+
+# --- String replace with only_if_match: applied to the ads-and-credits file
+#     and skipped for every other file ---
+- name: Fix show title typo in ads-and-credits
+  type: string
+  pattern: "Exampl Show"
+  action: replace
+  value: "Example Show"
+  only_if_match: "*/ads-and-credits.srt"

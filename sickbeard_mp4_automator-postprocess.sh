@@ -11,6 +11,6 @@ files="${SMA_FILES:=${MH_FILES:=[]}}" # Support old and new env variable from Si
 echo "${files}" | jq -c '.[]' | while read -r file; do
   file=$(sed -e 's/"//g' <<<"${file}")
   if [[ $file == *srt ]]; then
-    ${SCRIPT_PATH}/srtautoedit.py -c "${CONFIG_PATH}" -a -q -s "${file}"
+    ${SCRIPT_PATH}/srtautoedit.py -c "${CONFIG_PATH}" -a -q "${file}"
   fi
 done

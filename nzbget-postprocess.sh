@@ -21,7 +21,7 @@
 #SRTAUTOEDIT_PATH=
 
 # Script arguments
-#SCRIPT_ARGS=-s -q
+#SCRIPT_ARGS=-q
 
 ### NZBGET POST-PROCESSING SCRIPT                                          ###
 ##############################################################################

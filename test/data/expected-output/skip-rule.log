@@ -1,0 +1,77 @@
+srt-auto-edit — DRY RUN, no files will be written (pass -a to apply)  |  config: /config/settings.yaml  |  9 rules loaded
+
+/test-data/input/ads-and-credits.srt:1  00:00:01,000 --> 00:00:02,000  [removed]
+-  Subtitles by subhub.example
+| rules: Remove subtitle website credits
+
+/test-data/input/ads-and-credits.srt:2  00:00:03,000 --> 00:00:05,000  [modified]
+-  <i>Hello,world.</i>
++  <i>Hello, world.</i>
+| rules: Fix missing space after comma
+
+/test-data/input/ads-and-credits.srt:3  00:00:06,000 --> 00:00:08,000  [removed]
+-  www.opensubs.example
+| rules: Remove subtitle website credits
+
+/test-data/input/ads-and-credits.srt:4  00:00:09,000 --> 00:00:10,000  [removed]
+-  RLSGRP
+| rules: Remove release group watermark
+
+/test-data/input/ads-and-credits.srt:5  00:00:11,000 --> 00:00:13,000  [modified]
+-  <b>Exampl Show</b>
++  <b>Example Show</b>
+| rules: Fix show title typo in ads-and-credits
+Summary: 2 Lines to be modified; 3 Lines to be removed; '/test-data/input/ads-and-credits.srt'
+
+/test-data/input/malformed.srt:1  00:00:01,000 --> 00:00:02,000  [modified]
+-  ♪
++  (empty — cue dropped from output)
+| rules: Remove lines with only music symbols
+
+/test-data/input/malformed.srt:3  00:00:05,000 --> 00:00:06,000  [modified]
+-    This  has  extra   spaces.
++  This  has  extra   spaces.
+| rules: Remove spaces at beginning of line
+Summary: 2 Lines to be modified; 0 Lines to be removed; '/test-data/input/malformed.srt'
+
+/test-data/input/multiline.srt:3  00:00:07,000 --> 00:00:09,000  [modified]
+-  [ Earl ]
+-  Whoo! Jackie!
++  Whoo! Jackie!
+| rules: Remove sound tags on their own line, Remove spaces at beginning of line
+
+/test-data/input/multiline.srt:4  00:00:10,000 --> 00:00:12,000  [modified]
+-  ♪
+-  ♪ Yeah ♪
++  ♪ Yeah ♪
+| rules: Remove lines with only music symbols, Remove spaces at beginning of line
+
+/test-data/input/multiline.srt:7  00:00:19,000 --> 00:00:21,000  [modified]
+-  Line with trailing space   
+-  and the next line.
++  Line with trailing space
++  and the next line.
+| rules: Remove spaces at end of line
+
+/test-data/input/multiline.srt:8  00:00:22,000 --> 00:00:24,000  [modified]
+-  l'm not sure about that.
++  I'm not sure about that.
+| rules: Fix OCR lowercase L for I
+
+/test-data/input/multiline.srt:9  00:00:25,000 --> 00:00:27,000  [modified]
+-  A single trailing space. 
++  A single trailing space.
+| rules: Remove spaces at end of line
+Summary: 5 Lines to be modified; 0 Lines to be removed; '/test-data/input/multiline.srt'
+
+=== Rules fired (cues affected) ===
+      3  Remove spaces at beginning of line
+      2  Remove lines with only music symbols
+      2  Remove spaces at end of line
+      2  Remove subtitle website credits
+      1  Fix OCR lowercase L for I
+      1  Fix missing space after comma
+      1  Fix show title typo in ads-and-credits
+      1  Remove release group watermark
+      1  Remove sound tags on their own line
+TOTAL: mode=dry-run files_scanned=5 files_changed=3 cues_modified=9 cues_removed=3 files_deleted=0 files_failed=0 rules_fired=9

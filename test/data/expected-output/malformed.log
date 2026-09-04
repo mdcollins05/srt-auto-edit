@@ -1,0 +1,27 @@
+srt-auto-edit — DRY RUN, no files will be written (pass -a to apply)  |  config: /config/settings.yaml  |  11 rules loaded
+Parsing '/test-data/input/malformed.srt'...
+
+/test-data/input/malformed.srt:1  00:00:01,000 --> 00:00:02,000  [modified]
+-  ♪
++  (empty — cue dropped from output)
+| rules: Remove lines with only music symbols
+
+/test-data/input/malformed.srt:2  00:00:03,000 --> 00:00:04,000  [modified]
+-  <i></i>
++  (empty — cue dropped from output)
+| rules: Remove formatting
+
+/test-data/input/malformed.srt:3  00:00:05,000 --> 00:00:06,000  [modified]
+-    This  has  extra   spaces.
++  This has extra spaces.
+| rules: Remove extra spaces, Remove spaces at beginning of line
+Summary: 3 Lines to be modified; 0 Lines to be removed; '/test-data/input/malformed.srt'
+
+=== Rules fired (cues affected) ===
+      1  Remove extra spaces
+      1  Remove formatting
+      1  Remove lines with only music symbols
+      1  Remove spaces at beginning of line
+=== Rules loaded but never fired (7) ===
+     (run with -r to list them)
+TOTAL: mode=dry-run files_scanned=1 files_changed=1 cues_modified=3 cues_removed=0 files_deleted=0 files_failed=0 rules_fired=4

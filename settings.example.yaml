@@ -3,10 +3,11 @@ rules_directory: ./rules.d
 
 rules:
 # Example string replacement rule
-#- type: string
-#  pattern: www.google.com
+#- name: Shorten a URL
+#  type: string
+#  pattern: www.example.com
 #  action: replace
-#  value: google.com
+#  value: example.com
 
 - name: Remove formatting
   type: regex

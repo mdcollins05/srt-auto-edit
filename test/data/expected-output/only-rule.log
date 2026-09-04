@@ -1,0 +1,36 @@
+srt-auto-edit — DRY RUN, no files will be written (pass -a to apply)  |  config: /config/settings.yaml  |  1 rule loaded
+
+/test-data/input/ads-and-credits.srt:2  00:00:03,000 --> 00:00:05,000  [modified]
+-  <i>Hello,world.</i>
++  Hello,world.
+| rules: Remove formatting
+
+/test-data/input/ads-and-credits.srt:5  00:00:11,000 --> 00:00:13,000  [modified]
+-  <b>Exampl Show</b>
++  Exampl Show
+| rules: Remove formatting
+Summary: 2 Lines to be modified; 0 Lines to be removed; '/test-data/input/ads-and-credits.srt'
+
+/test-data/input/malformed.srt:2  00:00:03,000 --> 00:00:04,000  [modified]
+-  <i></i>
++  (empty — cue dropped from output)
+| rules: Remove formatting
+Summary: 1 Lines to be modified; 0 Lines to be removed; '/test-data/input/malformed.srt'
+
+/test-data/input/multiline.srt:1  00:00:01,000 --> 00:00:03,000  [modified]
+-  <i>Jullie moeten met mij uitgaan.
+-  Ik heb jullie al zolang niet gezien.</i>
++  Jullie moeten met mij uitgaan.
++  Ik heb jullie al zolang niet gezien.
+| rules: Remove formatting
+Summary: 1 Lines to be modified; 0 Lines to be removed; '/test-data/input/multiline.srt'
+
+/test-data/input/nested/deep.srt:1  00:00:01,000 --> 00:00:02,000  [modified]
+-  <i>Nested file.</i>
++  Nested file.
+| rules: Remove formatting
+Summary: 1 Lines to be modified; 0 Lines to be removed; '/test-data/input/nested/deep.srt'
+
+=== Rules fired (cues affected) ===
+      5  Remove formatting
+TOTAL: mode=dry-run files_scanned=5 files_changed=4 cues_modified=5 cues_removed=0 files_deleted=0 files_failed=0 rules_fired=1

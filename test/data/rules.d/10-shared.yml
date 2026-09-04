@@ -1,0 +1,6 @@
+# First file loaded from rules_directory (sorted order, .yml extension).
+- name: Remove ASS position tags
+  type: regex
+  pattern: '\{\\an?\d+\}'
+  action: replace
+  value: ""

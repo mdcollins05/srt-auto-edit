@@ -1,0 +1,25 @@
+# Rule names must be unique across every file that gets loaded. This config
+# breaks that twice: once within itself, and once against a rule defined in
+# rules.d. Both must be reported and the run must stop.
+rules_directory: /test-data/rules.d
+
+rules:
+- name: Remove formatting
+  type: regex
+  pattern: '</?i>'
+  action: replace
+  value: ""
+
+# Same name, same file.
+- name: Remove formatting
+  type: regex
+  pattern: '</?b>'
+  action: replace
+  value: ""
+
+# Same name as the rule in rules.d/20-extra.yaml.
+- name: Remove screen-reader position tags
+  type: regex
+  pattern: '</?pos[^>]*>'
+  action: replace
+  value: ""
