@@ -21,4 +21,3 @@ RLSGRP
 6
 00:00:14,000 --> 00:00:16,000
 Normal dialogue here.
-
