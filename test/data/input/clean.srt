@@ -9,4 +9,3 @@ This is a clean subtitle file.
 3
 00:00:07,000 --> 00:00:09,000
 No issues here.
-
